@@ -3,6 +3,16 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  // Enable static export for GitHub Pages
+  output: 'export',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  distDir: 'out',
+  images: {
+    unoptimized: true,
+  },
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
   webpack: (config) => {
     // Handle GLSL shader files
     config.module.rules.push({
@@ -24,9 +34,6 @@ const nextConfig = {
 
     return config;
   },
-  // Enable static export for GitHub Pages if needed
-  // output: 'export',
-  // trailingSlash: true,
 }
 
 module.exports = nextConfig;

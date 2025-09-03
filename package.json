@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "export": "next build",
+    "deploy": "npm run export && gh-pages -d out -t true"
   },
   "dependencies": {
     "next": "^14.1.0",
@@ -32,7 +34,8 @@
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
     "eslint": "^8.55.0",
-    "eslint-config-next": "^14.1.0"
+    "eslint-config-next": "^14.1.0",
+    "gh-pages": "^6.1.1"
   },
   "keywords": [
     "holographic",
