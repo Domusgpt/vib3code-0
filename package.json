@@ -1,0 +1,50 @@
+{
+  "name": "vib3code-0-holographic-blog",
+  "version": "1.0.0",
+  "description": "VIB34D Holographic AI Blog - Agentic research-and-writing powered blog with multi-canvas WebGL visualizers",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@react-three/fiber": "^8.15.0",
+    "@react-three/drei": "^9.92.0",
+    "@react-three/postprocessing": "^2.15.0",
+    "three": "^0.160.0",
+    "gsap": "^3.12.0",
+    "@studio-freight/lenis": "^1.0.27",
+    "zustand": "^4.4.0",
+    "framer-motion": "^10.16.0",
+    "@types/three": "^0.160.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "^14.1.0"
+  },
+  "keywords": [
+    "holographic",
+    "AI",
+    "blog",
+    "VIB34D",
+    "WebGL",
+    "Next.js",
+    "React Three Fiber",
+    "4D visualization",
+    "agentic content"
+  ],
+  "author": "VIB3CODE Research Division",
+  "license": "MIT"
+}

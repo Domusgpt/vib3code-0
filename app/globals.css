@@ -1,0 +1,366 @@
+/**
+ * VIB3CODE-0 Global Styles
+ * 
+ * Implements holographic design system with CSS custom properties
+ * for dynamic parameter binding from Zustand store
+ */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* CSS Custom Properties for Dynamic Parameter Binding */
+:root {
+  /* Home parameter bindings (updated by Zustand) */
+  --param-hue: 0.6;
+  --param-density: 0.5;
+  --param-morph: 1.0;
+  --param-chaos: 0.2;
+  --param-glitch: 0.1;
+  --param-chroma-shift: 0.05;
+  --param-time-scale: 1.0;
+  --param-beat-phase: 0.0;
+  
+  /* Interaction state variables */
+  --hover-intensity: 0;
+  --focus-section: 'none';
+  --scroll-progress: 0;
+  
+  /* Device orientation (4D perspective) */
+  --device-alpha: 0;
+  --device-beta: 0;
+  --device-gamma: 0;
+  --tilt-intensity: 0;
+  
+  /* Visual feedback variables */
+  --extreme-glow: 0;
+  --pulse-speed: 2s;
+  --rgb-flash-intensity: 0;
+  --rgb-hue-shift: 0;
+  
+  /* Background parallax transforms */
+  --bg-offset-x: 0px;
+  --bg-offset-y: 0px;
+  --bg-scale: 1.0;
+  --bg-rotation: 0deg;
+  --bg-blur: 0px;
+}
+
+/* Base Typography (Orbitron font) */
+html {
+  font-family: var(--font-orbitron), monospace;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2a 30%, #0f0f1f 70%, #0a0a0a 100%);
+  color: #ffffff;
+  overflow-x: hidden;
+  /* Enable hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Holographic Background System */
+.holographic-background {
+  position: fixed;
+  top: -100px;
+  left: -100px; 
+  right: -100px;
+  bottom: -100px;
+  z-index: -2;
+  
+  /* Dynamic background transforms based on parameters */
+  background: 
+    radial-gradient(circle at 20% 30%, hsla(calc(var(--param-hue) * 360), 70%, 50%, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, hsla(calc((var(--param-hue) + 0.5) * 360), 70%, 50%, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0a0a 0%, #1a1a2a 30%, #0f0f1f 70%, #0a0a0a 100%);
+  
+  backdrop-filter: blur(calc(1px + var(--bg-blur)));
+  
+  /* DRAMATIC parallax movement with scaling, rotation, and blur */
+  transform: 
+    translate(var(--bg-offset-x), var(--bg-offset-y)) 
+    scale(var(--bg-scale)) 
+    rotate(var(--bg-rotation));
+    
+  transition: transform 0.1s ease-out, backdrop-filter 0.1s ease-out;
+}
+
+.holographic-background::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  
+  /* Dynamic grid based on parameters */
+  background-image: 
+    linear-gradient(hsla(calc(var(--param-hue) * 360), 100%, 50%, calc(var(--param-density) * 0.1)) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(calc(var(--param-hue) * 360), 100%, 50%, calc(var(--param-density) * 0.1)) 1px, transparent 1px);
+  
+  background-size: calc(50px * var(--param-time-scale)) calc(50px * var(--param-time-scale));
+  
+  animation: gridShift calc(20s / var(--param-time-scale)) linear infinite;
+  
+  /* Double parallax for grid layer */
+  transform: translate(calc(var(--bg-offset-x) * 1.5), calc(var(--bg-offset-y) * 1.5));
+}
+
+@keyframes gridShift {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+/* Holographic Spinner (Loading Animation) */
+.holographic-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.spinner-ring {
+  width: 60px;
+  height: 60px;
+  border: 2px solid transparent;
+  border-top: 2px solid #00ffff;
+  border-right: 2px solid #ff00ff;
+  border-radius: 50%;
+  animation: holographicSpin 2s linear infinite;
+  position: relative;
+}
+
+.spinner-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(0, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 0, 255, 0.5);
+  border-radius: 50%;
+  animation: holographicSpin 3s linear infinite reverse;
+}
+
+@keyframes holographicSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner-text {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  letter-spacing: 0.1em;
+}
+
+/* Holographic Text Effects */
+.holographic-text {
+  background: linear-gradient(
+    45deg,
+    #00ffff,
+    #ff00ff,
+    #ffff00,
+    #00ffff
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holographicGradient 3s ease-in-out infinite;
+}
+
+@keyframes holographicGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* RGB Flash Effects (for interactions) */
+.rgb-flash-active {
+  position: relative;
+  z-index: 1;
+}
+
+.rgb-flash-active::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    calc(45deg + (var(--rgb-hue-shift) * 1deg)),
+    transparent 15%,
+    hsla(calc(var(--rgb-hue-shift)), 100%, 50%, calc(var(--rgb-flash-intensity) * 0.3)) 40%,
+    hsla(calc(var(--rgb-hue-shift) + 120), 100%, 50%, calc(var(--rgb-flash-intensity) * 0.4)) 50%,
+    hsla(calc(var(--rgb-hue-shift) + 240), 100%, 50%, calc(var(--rgb-flash-intensity) * 0.3)) 60%,
+    transparent 85%
+  );
+  border-radius: inherit;
+  mix-blend-mode: screen;
+  opacity: var(--rgb-flash-intensity);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Extreme Tilt Effects */
+.extreme-effects {
+  filter: 
+    brightness(calc(1 + var(--extreme-glow) * 0.3))
+    saturate(calc(1 + var(--extreme-glow) * 0.5))
+    hue-rotate(calc(var(--extreme-glow) * 30deg));
+  
+  animation: extremeTiltPulse var(--pulse-speed) ease-in-out infinite;
+  animation-play-state: var(--extreme-glow) > 0 ? running : paused;
+}
+
+@keyframes extremeTiltPulse {
+  0%, 100% { 
+    filter: 
+      brightness(calc(1 + var(--extreme-glow) * 0.3))
+      saturate(calc(1 + var(--extreme-glow) * 0.5))
+      hue-rotate(calc(var(--extreme-glow) * 30deg)); 
+  }
+  50% { 
+    filter: 
+      brightness(calc(1 + var(--extreme-glow) * 0.6))
+      saturate(calc(1 + var(--extreme-glow) * 0.8))
+      hue-rotate(calc(var(--extreme-glow) * 60deg)); 
+  }
+}
+
+/* Canvas Container Styles */
+.webgl-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Multi-Canvas Layer System */
+.canvas-layer-background { z-index: 1; mix-blend-mode: multiply; }
+.canvas-layer-shadow { z-index: 2; mix-blend-mode: overlay; }
+.canvas-layer-content { z-index: 3; mix-blend-mode: screen; }
+.canvas-layer-highlight { z-index: 4; mix-blend-mode: color-dodge; }
+.canvas-layer-accent { z-index: 5; mix-blend-mode: difference; }
+
+/* Complementary Accent Layers */
+.accent-layer {
+  mix-blend-mode: multiply;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.accent-layer.active {
+  opacity: 0.3;
+}
+
+/* Section Container Styles */
+.section-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  
+  /* Dynamic transforms based on scroll and parameters */
+  transform: 
+    perspective(1000px)
+    rotateX(calc(var(--device-beta) * -0.3deg))
+    rotateY(calc(var(--device-gamma) * -0.3deg))
+    translateZ(calc(var(--tilt-intensity) * 20px));
+  
+  transition: transform 0.2s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .section-container {
+    padding: 1rem;
+  }
+  
+  /* Reduce effects intensity on mobile */
+  :root {
+    --bg-blur: 0px;
+    --extreme-glow: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+  }
+  
+  .holographic-background::before {
+    background-size: 25px 25px;
+  }
+}
+
+/* High performance mode (for low-end devices) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .holographic-background::before {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .holographic-background,
+  .holographic-spinner,
+  .webgl-canvas {
+    display: none;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-contrast: high) {
+  :root {
+    --param-hue: 0.6;
+    --param-density: 1.0;
+  }
+  
+  body {
+    background: #000000;
+    color: #ffffff;
+  }
+  
+  .holographic-text {
+    -webkit-text-fill-color: #00ffff;
+    background: none;
+  }
+}
+
+/* Dark mode support (already dark by default) */
+@media (prefers-color-scheme: light) {
+  /* Keep dark theme for holographic effect */
+}
+
+/* Focus indicators for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #00ffff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
