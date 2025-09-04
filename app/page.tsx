@@ -95,16 +95,8 @@ function HolographicBlogWithErrorHandling() {
         setLoadingStep(2);
         console.log('[VIB3CODE] Step 2: Initializing systems...');
         
-        // Step 2: Initialize store and events
-        try {
-          const events = useEvents();
-          events.UPDATE_HOME({});
-          console.log('[VIB3CODE] ✅ Store initialized');
-        } catch (err) {
-          console.error('[VIB3CODE] ❌ Failed to initialize store:', err);
-          setError(`Store initialization failed: ${err instanceof Error ? err.message : String(err)}`);
-          return;
-        }
+        // Step 2: Store will be initialized automatically when components mount
+        console.log('[VIB3CODE] ✅ Store ready for component initialization');
         
         // Step 3: Initialize WebGL Manager
         try {
