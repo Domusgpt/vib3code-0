@@ -1,9 +1,9 @@
 /**
- * VIB3CODE-0 Simple Test Implementation
+ * VIB3CODE-0 Minimal Test Implementation
  * 
- * Fallback to simple version until complex components are debugged
+ * Ultra-minimal version to verify site works
  */
 
 'use client';
 
-export { default } from './page-simple';
+export { default } from './page-minimal';
