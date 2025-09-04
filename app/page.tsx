@@ -65,7 +65,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ React Three Fiber imported');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to import React Three Fiber:', err);
-          setError(`React Three Fiber import failed: ${err.message}`);
+          setError(`React Three Fiber import failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -78,7 +78,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ Store imported');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to import store:', err);
-          setError(`Store import failed: ${err.message}`);
+          setError(`Store import failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -88,7 +88,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ WebGL Manager imported');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to import WebGL manager:', err);
-          setError(`WebGL Manager import failed: ${err.message}`);
+          setError(`WebGL Manager import failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -102,7 +102,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ Store initialized');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to initialize store:', err);
-          setError(`Store initialization failed: ${err.message}`);
+          setError(`Store initialization failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -113,7 +113,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ WebGL Manager initialized');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to initialize WebGL Manager:', err);
-          setError(`WebGL Manager initialization failed: ${err.message}`);
+          setError(`WebGL Manager initialization failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -126,7 +126,7 @@ function HolographicBlogWithErrorHandling() {
           console.log('[VIB3CODE] ✅ HomeSection loaded');
         } catch (err) {
           console.error('[VIB3CODE] ❌ Failed to load HomeSection:', err);
-          setError(`HomeSection import failed: ${err.message}`);
+          setError(`HomeSection import failed: ${err instanceof Error ? err.message : String(err)}`);
           return;
         }
         
@@ -147,7 +147,7 @@ function HolographicBlogWithErrorHandling() {
         
       } catch (err) {
         console.error('[VIB3CODE] ❌ Initialization failed:', err);
-        setError(`Initialization failed: ${err.message}`);
+        setError(`Initialization failed: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
     
