@@ -78,7 +78,22 @@ function HolographicBlog() {
     webglManager.setMaxContexts(4);
     webglManager.setSectionActive('home', true);
     
+    // Hide loading screen after components mount
+    const hideLoading = () => {
+      const loading = document.getElementById('global-loading');
+      if (loading) {
+        loading.style.opacity = '0';
+        setTimeout(() => {
+          loading.style.display = 'none';
+        }, 1000);
+      }
+    };
+    
+    // Small delay to ensure components are rendered
+    const timer = setTimeout(hideLoading, 1500);
+    
     return () => {
+      clearTimeout(timer);
       // Cleanup on unmount
       webglManager.cleanup();
     };
@@ -125,7 +140,7 @@ function HolographicBlog() {
       {/* Parameter Control Panel - Zustand state management */}
       <ParameterPanel />
       
-      {/* Global loading screen overlay (managed by CSS) */}
+      {/* Global loading screen overlay (will be hidden after mount) */}
       <div id="global-loading" className="fixed inset-0 bg-black z-50 transition-opacity duration-1000">
         <HolographicLoader />
       </div>
