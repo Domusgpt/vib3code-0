@@ -49,10 +49,10 @@ export default function ScrollController({ sections, onSectionChange, currentSec
         lenisRef.current = lenis;
         
         // RAF loop for Lenis
-        function raf(time: number) {
+        const raf = (time: number) => {
           lenis?.raf(time);
           requestAnimationFrame(raf);
-        }
+        };
         requestAnimationFrame(raf);
         
         // Setup GSAP ScrollTrigger with Lenis
