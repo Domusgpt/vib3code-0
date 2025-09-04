@@ -9,7 +9,11 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "export": "next build",
-    "deploy": "npm run export && gh-pages -d out -t true"
+    "deploy": "npm run export && gh-pages -d out -t true",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "next": "^14.1.0",
@@ -23,7 +27,8 @@
     "lenis": "^1.0.42",
     "zustand": "^4.4.0",
     "framer-motion": "^10.16.0",
-    "@types/three": "^0.160.0"
+    "@types/three": "^0.160.0",
+    "react-error-boundary": "^4.0.11"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -37,7 +42,8 @@
     "eslint-config-next": "^14.1.0",
     "gh-pages": "^6.1.1",
     "raw-loader": "^4.0.2",
-    "file-loader": "^6.2.0"
+    "file-loader": "^6.2.0",
+    "@playwright/test": "^1.40.0"
   },
   "keywords": [
     "holographic",
