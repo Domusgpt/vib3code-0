@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     title: 'VIB3CODE-0 Holographic AI Blog',
     description: 'Agentic AI blog with holographic transitions and 4D visualizations',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+};
+
+// Modern Next.js viewport configuration
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
   themeColor: '#0a0a0a',
 };
 

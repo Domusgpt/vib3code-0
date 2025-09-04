@@ -348,6 +348,11 @@ class WebGLContextManager {
    * EVENT BINDING
    */
   private bindEvents(): void {
+    // Only bind events on client-side (prevent SSR errors)
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
     // Handle page visibility changes
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
