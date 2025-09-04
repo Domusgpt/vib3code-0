@@ -401,7 +401,7 @@ export default function InfoTheorySection() {
               <meshBasicMaterial
                 color={`hsl(${homeParams.hue * 360}, 70%, 60%)`}
                 transparent
-                opacity={(sectionParams?.information || 0.5) * 0.8}
+                opacity={(sectionParams?.density || 0.5) * 0.8}
               />
             </mesh>
           ) : null;
