@@ -38,7 +38,7 @@ export default function ScrollController({ sections, onSectionChange, currentSec
     const initializeLenis = async () => {
       try {
         // Dynamic import of Lenis
-        const Lenis = (await import('lenis')).default;
+        const Lenis = (await import('@studio-freight/lenis')).default;
         
         // Initialize Lenis smooth scroll
         lenis = new Lenis({

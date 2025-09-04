@@ -215,7 +215,6 @@ body {
     hue-rotate(calc(var(--extreme-glow) * 30deg));
   
   animation: extremeTiltPulse var(--pulse-speed) ease-in-out infinite;
-  animation-play-state: var(--extreme-glow) > 0 ? running : paused;
 }
 
 @keyframes extremeTiltPulse {
