@@ -120,7 +120,7 @@ function CanvasLayer({ id, layerType, blend = 'screen', opacity = 1 }: CanvasLay
           <ambientLight intensity={0.1} />
           <directionalLight 
             position={[5, 5, 5]} 
-            intensity={params?.intensity || 0.8}
+            intensity={0.3 + (params?.density || 0.5) * 0.5}
             color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 60%)`}
           />
           
