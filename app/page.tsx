@@ -13,6 +13,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useStore, useEvents, useHomeParams, SECTION_CONFIGS } from '@/lib/store';
+import { webglManager } from '@/lib/webgl-manager';
 import { Suspense, lazy } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -73,24 +74,64 @@ interface CanvasLayerProps {
   opacity?: number;
 }
 
-// Multi-canvas layer system from VIB34D architecture
+// Smart WebGL Canvas Layer with Context Management
 function CanvasLayer({ id, layerType, blend = 'screen', opacity = 1 }: CanvasLayerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isCanvasActive, setIsCanvasActive] = useState(false);
+  const [contextId, setContextId] = useState<string | null>(null);
   const params = useStore((state) => state.sections[id] || state.home);
-  
+
+  // Register canvas with WebGL manager on mount
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const canvasId = webglManager.registerCanvas(id, layerType, canvasRef.current);
+    setContextId(canvasId);
+
+    // Set up event listeners for smart loading/destruction
+    webglManager.addEventListener('onCanvasLoad', (instance) => {
+      if (instance.id === canvasId) {
+        setIsCanvasActive(true);
+        console.log(`[Canvas] Loaded: ${canvasId}`);
+      }
+    });
+
+    webglManager.addEventListener('onCanvasDestroy', (instance) => {
+      if (instance.id === canvasId) {
+        setIsCanvasActive(false);
+        console.log(`[Canvas] Destroyed: ${canvasId}`);
+      }
+    });
+
+    webglManager.addEventListener('onContextLost', (instance) => {
+      if (instance.id === canvasId) {
+        console.warn(`[Canvas] Context lost: ${canvasId}`);
+        setIsCanvasActive(false);
+      }
+    });
+
+    return () => {
+      // Cleanup handled by WebGL manager
+    };
+  }, [id, layerType]);
+
   return (
     <div 
-      className={`absolute inset-0 canvas-layer-${layerType}`}
+      ref={containerRef}
+      className={`absolute inset-0 canvas-layer-${layerType} ${isCanvasActive ? 'active' : 'inactive'}`}
       style={{ 
         mixBlendMode: blend,
-        opacity,
+        opacity: isCanvasActive ? opacity : 0.1,
         zIndex: {
           background: 1,
           shadow: 2, 
           content: 3,
           highlight: 4,
           accent: 5
-        }[layerType]
+        }[layerType],
+        transition: 'opacity 0.5s ease-in-out',
+        pointerEvents: isCanvasActive ? 'auto' : 'none',
       }}
     >
       <Canvas
@@ -114,29 +155,65 @@ function CanvasLayer({ id, layerType, blend = 'screen', opacity = 1 }: CanvasLay
           max: 1,
           debounce: 200,
         }}
+        onCreated={(state) => {
+          // Canvas ready for WebGL manager
+          console.log(`[Canvas] WebGL context created: ${contextId}`);
+        }}
       >
-        <Suspense fallback={null}>
-          {/* VIB3 Engine components will be imported here */}
-          <ambientLight intensity={0.1} />
-          <directionalLight 
-            position={[5, 5, 5]} 
-            intensity={0.3 + (params?.density || 0.5) * 0.5}
-            color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 60%)`}
-          />
-          
-          {/* Placeholder visualization - will be replaced with actual VIB engines */}
-          <mesh>
-            <planeGeometry args={[4, 4, 32, 32]} />
-            <meshStandardMaterial
-              color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 50%)`}
-              transparent
-              opacity={0.3}
-              wireframe={layerType === 'accent'}
+        {isCanvasActive && (
+          <Suspense fallback={null}>
+            <CanvasContent 
+              sectionId={id}
+              layerType={layerType}
+              params={params}
             />
-          </mesh>
-        </Suspense>
+          </Suspense>
+        )}
       </Canvas>
+      
+      {/* Loading indicator for inactive canvases */}
+      {!isCanvasActive && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm">
+          <div className="text-xs text-cyan-400/50 font-orbitron">
+            {layerType} layer loading...
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+// Separate R3F content component (prevents hook errors)
+function CanvasContent({ 
+  sectionId, 
+  layerType, 
+  params 
+}: { 
+  sectionId: string; 
+  layerType: string; 
+  params: any; 
+}) {
+  return (
+    <>
+      {/* VIB3 Engine components will be imported here */}
+      <ambientLight intensity={0.1} />
+      <directionalLight 
+        position={[5, 5, 5]} 
+        intensity={0.3 + (params?.density || 0.5) * 0.5}
+        color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 60%)`}
+      />
+      
+      {/* Placeholder visualization - will be replaced with actual VIB engines */}
+      <mesh>
+        <planeGeometry args={[4, 4, 32, 32]} />
+        <meshStandardMaterial
+          color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 50%)`}
+          transparent
+          opacity={0.3}
+          wireframe={layerType === 'accent'}
+        />
+      </mesh>
+    </>
   );
 }
 
@@ -268,11 +345,31 @@ export default function HolographicBlog() {
       events.CLOCK_BEAT();
     }, 2000); // 2-second beat interval
     
+    // Initialize WebGL Manager
+    webglManager.setMaxContexts(4); // Allow up to 4 active contexts
+    
+    // Set up WebGL monitoring
+    webglManager.addEventListener('onCanvasLoad', (instance) => {
+      console.log(`[WebGL] Canvas loaded: ${instance.id} (${instance.sectionId}/${instance.layerType})`);
+    });
+    
+    webglManager.addEventListener('onCanvasDestroy', (instance) => {
+      console.log(`[WebGL] Canvas destroyed: ${instance.id} (${instance.sectionId}/${instance.layerType})`);
+    });
+    
+    webglManager.addEventListener('onMaxContextsReached', (count) => {
+      console.warn(`[WebGL] Max contexts reached: ${count}/4 - starting smart cleanup`);
+    });
+    
+    // Activate home section by default
+    webglManager.setSectionActive('home', true);
+    
     setIsInitialized(true);
     
     return () => {
       window.removeEventListener('deviceorientation', handleOrientation);
       clearInterval(beatInterval);
+      webglManager.destroy();
     };
   }, [events]);
   
@@ -283,10 +380,20 @@ export default function HolographicBlog() {
     });
   }, [homeParams]);
   
-  // Navigation handler
+  // Navigation handler with WebGL choreography
   const navigateToSection = (sectionId: string) => {
+    const previousSection = currentSection;
     setCurrentSection(sectionId);
     events.SET_FOCUS(sectionId);
+    
+    // Smart WebGL Context Management - trigger canvas loading/destruction
+    SECTIONS.forEach((section) => {
+      const isActive = section.id === sectionId;
+      webglManager.setSectionActive(section.id, isActive);
+    });
+    
+    console.log(`[Navigation] Section changed: ${previousSection} → ${sectionId}`);
+    console.log(`[WebGL] Active contexts:`, webglManager.getContextInfo());
     
     // Trigger section-specific transition
     const config = SECTION_CONFIGS[sectionId];

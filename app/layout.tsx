@@ -48,8 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${orbitron.variable}`}>
       <head>
-        {/* Preload critical assets */}
-        <link rel="preload" href="/fonts/orbitron-variable.woff2" as="font" type="font/woff2" crossOrigin="" />
+        {/* Performance hints for Google Fonts */}
         
         {/* Viewport meta for mobile optimization */}
         <meta name="mobile-web-app-capable" content="yes" />
