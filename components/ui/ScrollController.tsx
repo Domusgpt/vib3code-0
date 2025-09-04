@@ -44,10 +44,6 @@ export default function ScrollController({ sections, onSectionChange, currentSec
         lenis = new Lenis({
           duration: 1.2,
           easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing
-          smooth: true,
-          mouseMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
         });
         
         lenisRef.current = lenis;
