@@ -35,6 +35,7 @@ class WebGLContextManager {
   private loadingQueue: string[] = [];
   private maxActiveContexts = 4;
   private events: Partial<WebGLManagerEvents> = {};
+  private memoryCheckInterval?: NodeJS.Timeout;
   
   // Priority weights for different layer types
   private readonly LAYER_PRIORITIES = {
@@ -362,14 +363,24 @@ class WebGLContextManager {
       }
     });
 
-    // Handle memory pressure
+    // Handle memory pressure (less aggressive)
     if ('memory' in performance) {
-      setInterval(() => {
+      let lastCleanup = 0;
+      const memoryCheckInterval = setInterval(() => {
         const memInfo = (performance as any).memory;
-        if (memInfo.usedJSHeapSize > memInfo.totalJSHeapSize * 0.9) {
+        const now = Date.now();
+        const memoryPressure = memInfo.usedJSHeapSize / memInfo.totalJSHeapSize;
+        
+        // Only cleanup if memory is REALLY high (95%) and we haven't cleaned up recently
+        if (memoryPressure > 0.95 && (now - lastCleanup) > 30000) { // 30 second cooldown
+          console.warn(`[WebGL Manager] High memory pressure: ${(memoryPressure * 100).toFixed(1)}%`);
           this.emergencyCleanup();
+          lastCleanup = now;
         }
-      }, 5000);
+      }, 10000); // Check every 10 seconds instead of 5
+      
+      // Store interval ID for cleanup
+      this.memoryCheckInterval = memoryCheckInterval;
     }
   }
 
@@ -463,6 +474,12 @@ class WebGLContextManager {
     Array.from(this.activeContexts).forEach(id => {
       this.destroyCanvas(id);
     });
+    
+    // Clear memory check interval
+    if (this.memoryCheckInterval) {
+      clearInterval(this.memoryCheckInterval);
+      this.memoryCheckInterval = undefined;
+    }
     
     this.contexts.clear();
     this.activeContexts.clear();
