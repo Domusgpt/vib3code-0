@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useStore, useEvents, useHomeParams, SECTION_CONFIGS } from '@/lib/store';
 import { webglManager } from '@/lib/webgl-manager';
+import VIB3Engine from '@/components/engines/VIB3Engine';
 import { Suspense, lazy } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -195,7 +196,7 @@ function CanvasContent({
 }) {
   return (
     <>
-      {/* VIB3 Engine components will be imported here */}
+      {/* Ambient lighting for depth */}
       <ambientLight intensity={0.1} />
       <directionalLight 
         position={[5, 5, 5]} 
@@ -203,16 +204,24 @@ function CanvasContent({
         color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 60%)`}
       />
       
-      {/* Placeholder visualization - will be replaced with actual VIB engines */}
-      <mesh>
-        <planeGeometry args={[4, 4, 32, 32]} />
-        <meshStandardMaterial
-          color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 50%)`}
-          transparent
-          opacity={0.3}
-          wireframe={layerType === 'accent'}
-        />
-      </mesh>
+      {/* VIB3 Engine with sophisticated geometric systems */}
+      <VIB3Engine
+        sectionId={sectionId}
+        layerType={layerType as any}
+        params={{
+          geometry: params?.geometry || 0,
+          morph: params?.morph || 1,
+          chaos: params?.chaos || 0.2,
+          density: params?.density || 0.5,
+          hue: params?.hue || 0.6,
+          noiseFreq: params?.noiseFreq || 2.1,
+          dispAmp: params?.dispAmp || 0.2,
+          timeScale: params?.timeScale || 1.0,
+          beatPhase: params?.beatPhase || 0.0,
+        }}
+        opacity={layerType === 'accent' ? 0.7 : 1.0}
+        pointSize={layerType === 'content' ? 3.0 : 2.0}
+      />
     </>
   );
 }
