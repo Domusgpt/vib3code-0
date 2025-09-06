@@ -234,24 +234,26 @@ export default function HomePage() {
           content: 'Exploring the frontiers of artificial intelligence, machine learning, and computational creativity.'
         };
 
-        // Load content for each category
+        // Load content for each category using static content
         const categoryKeys = Object.keys(contentCategories) as (keyof typeof contentCategories)[];
         const contentSections: BlogSection[] = [];
 
+        // Create static content provider
+        const { contentAPI } = await import('@/lib/content-api');
+        
         for (const categoryKey of categoryKeys) {
           const category = contentCategories[categoryKey];
           
           try {
-            // Fetch posts for this category
-            const response = await fetch(`/api/posts?category=${categoryKey}&limit=6`);
-            const data = await response.json();
+            // Get posts for this category from static provider
+            const result = await contentAPI.getPostsByCategory(categoryKey);
             
             contentSections.push({
               id: categoryKey,
               title: category.name.split(' &')[0], // Shorten for display
               subtitle: category.name,
               content: category.description,
-              posts: data.posts || [],
+              posts: result.posts || [],
               theme: category.holographicTheme
             });
           } catch (error) {
