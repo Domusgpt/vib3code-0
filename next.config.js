@@ -1,16 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // App Router is now stable in Next.js 14
-  // Enable static export for GitHub Pages
-  output: 'export',
-  trailingSlash: true,
-  skipTrailingSlashRedirect: true,
-  distDir: 'out',
+  // Development vs Production config
+  ...(process.env.NODE_ENV === 'production' ? {
+    output: 'export',
+    trailingSlash: true,
+    skipTrailingSlashRedirect: true,
+    distDir: 'out',
+    assetPrefix: '/vib3code-0',
+    basePath: '/vib3code-0',
+  } : {
+    // Development-only config
+    reactStrictMode: true,
+    swcMinify: true,
+  }),
+  
   images: {
     unoptimized: true,
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
-  basePath: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
   webpack: (config) => {
     // Handle GLSL shader files
     config.module.rules.push({

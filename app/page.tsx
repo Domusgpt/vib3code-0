@@ -1,477 +1,311 @@
 /**
- * VIB3CODE-0 Main Holographic Interface
+ * VIB3CODE-0 Holographic AI Blog
  * 
- * Primary entry point implementing PDF specification:
- * - Faux-scroll navigation with dimensional expansion
- * - Multi-canvas WebGL visualization system  
- * - Section-based parameter derivation
- * - GSAP ScrollTrigger + Lenis smooth scroll
+ * Professional AI blog with subtle holographic effects
+ * Clean, readable layout focused on content
  */
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { useStore, useEvents, useHomeParams, SECTION_CONFIGS } from '@/lib/store';
-import { webglManager } from '@/lib/webgl-manager';
-import VIB3GeometryRenderer from '@/components/renderers/VIB3GeometryRenderer';
-import { Suspense, lazy } from 'react';
-import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { BlogPost, contentCategories } from '@/lib/blog-config';
 
-// Lazy load heavy components
-const ScrollController = dynamic(() => import('@/components/ui/ScrollController'), {
-  ssr: false,
-});
-
-const ParameterPanel = dynamic(() => import('@/components/ui/ParameterPanel'), {
-  ssr: false,
-});
-
-// Section components (lazy loaded for performance)
-const HomeSection = lazy(() => import('@/components/sections/HomeSection'));
-const AINewsSection = lazy(() => import('@/components/sections/AINewsSection'));  
-const VibeCodingSection = lazy(() => import('@/components/sections/VibeCodingSection'));
-const InfoTheorySection = lazy(() => import('@/components/sections/InfoTheorySection'));
-const PhilosophySection = lazy(() => import('@/components/sections/PhilosophySection'));
-
-// Section configuration from PDF specification
-const SECTIONS = [
-  {
-    id: 'home',
-    name: 'Home',
-    component: HomeSection,
-    description: 'Holographic AI Blog Portal',
-  },
-  {
-    id: 'ai-news',
-    name: 'AI News',
-    component: AINewsSection,
-    description: 'Daily AI Research & Development',
-  },
-  {
-    id: 'vibe-coding',
-    name: 'Vibe Coding',
-    component: VibeCodingSection,
-    description: 'Creative Programming & Development',
-  },
-  {
-    id: 'info-theory',
-    name: 'Info Theory',
-    component: InfoTheorySection,
-    description: 'Information Systems & Mathematics',
-  },
-  {
-    id: 'philosophy',
-    name: 'Philosophy',
-    component: PhilosophySection,
-    description: 'AI Ethics & Philosophical Inquiry',
-  },
-];
-
-interface CanvasLayerProps {
+interface BlogSection {
   id: string;
-  layerType: 'background' | 'shadow' | 'content' | 'highlight' | 'accent';
-  blend?: 'multiply' | 'screen' | 'overlay' | 'color-dodge' | 'difference';
-  opacity?: number;
+  title: string;
+  subtitle: string;
+  content: string;
+  posts?: BlogPost[];
+  theme?: typeof contentCategories[keyof typeof contentCategories]['holographicTheme'];
 }
 
-// Smart WebGL Canvas Layer with Context Management
-function CanvasLayer({ id, layerType, blend = 'screen', opacity = 1 }: CanvasLayerProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isCanvasActive, setIsCanvasActive] = useState(false);
-  const [contextId, setContextId] = useState<string | null>(null);
-  const params = useStore((state) => state.sections[id] || state.home);
-
-  // Register canvas with WebGL manager on mount
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const canvasId = webglManager.registerCanvas(id, layerType, canvasRef.current);
-    setContextId(canvasId);
-
-    // Set up event listeners for smart loading/destruction
-    webglManager.addEventListener('onCanvasLoad', (instance) => {
-      if (instance.id === canvasId) {
-        setIsCanvasActive(true);
-        console.log(`[Canvas] Loaded: ${canvasId}`);
-      }
-    });
-
-    webglManager.addEventListener('onCanvasDestroy', (instance) => {
-      if (instance.id === canvasId) {
-        setIsCanvasActive(false);
-        console.log(`[Canvas] Destroyed: ${canvasId}`);
-      }
-    });
-
-    webglManager.addEventListener('onContextLost', (instance) => {
-      if (instance.id === canvasId) {
-        console.warn(`[Canvas] Context lost: ${canvasId}`);
-        setIsCanvasActive(false);
-      }
-    });
-
-    return () => {
-      // Cleanup handled by WebGL manager
-    };
-  }, [id, layerType]);
-
+// Simple holographic background effect (no complex visualizers)
+function HolographicBackground() {
   return (
-    <div 
-      ref={containerRef}
-      className={`absolute inset-0 canvas-layer-${layerType} ${isCanvasActive ? 'active' : 'inactive'}`}
-      style={{ 
-        mixBlendMode: blend,
-        opacity: isCanvasActive ? opacity : 0.1,
-        zIndex: {
-          background: 1,
-          shadow: 2, 
-          content: 3,
-          highlight: 4,
-          accent: 5
-        }[layerType],
-        transition: 'opacity 0.5s ease-in-out',
-        pointerEvents: isCanvasActive ? 'auto' : 'none',
-      }}
-    >
-      <Canvas
-        ref={canvasRef}
-        id={`${id}-${layerType}-canvas`}
-        className="webgl-canvas"
-        camera={{ 
-          position: [0, 0, 5],
-          fov: 45,
-          near: 0.1,
-          far: 1000
-        }}
-        gl={{
-          alpha: true,
-          antialias: true,
-          powerPreference: 'high-performance',
-          preserveDrawingBuffer: false,
-        }}
-        performance={{
-          min: 0.5,
-          max: 1,
-          debounce: 200,
-        }}
-        onCreated={(state) => {
-          // Canvas ready for WebGL manager
-          console.log(`[Canvas] WebGL context created: ${contextId}`);
-        }}
-      >
-        {isCanvasActive && (
-          <Suspense fallback={null}>
-            <CanvasContent 
-              sectionId={id}
-              layerType={layerType}
-              params={params}
-            />
-          </Suspense>
-        )}
-      </Canvas>
-      
-      {/* Loading indicator for inactive canvases */}
-      {!isCanvasActive && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm">
-          <div className="text-xs text-cyan-400/50 font-orbitron">
-            {layerType} layer loading...
-          </div>
-        </div>
-      )}
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-900 to-black" />
+      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-cyan-500/5 to-transparent animate-pulse" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
     </div>
   );
 }
 
-// Separate R3F content component (prevents hook errors)
-function CanvasContent({ 
-  sectionId, 
-  layerType, 
-  params 
-}: { 
-  sectionId: string; 
-  layerType: string; 
-  params: any; 
-}) {
+// Article card component
+function ArticleCard({ post }: { post: BlogPost }) {
   return (
-    <>
-      {/* Ambient lighting for depth */}
-      <ambientLight intensity={0.1} />
-      <directionalLight 
-        position={[5, 5, 5]} 
-        intensity={0.3 + (params?.density || 0.5) * 0.5}
-        color={`hsl(${(params?.hue || 0.6) * 360}, 70%, 60%)`}
-      />
-      
-      {/* VIB3 Geometry Renderer */}
-      <VIB3GeometryRenderer
-        sectionId={sectionId}
-        layerType={layerType}
-        params={params}
-      />
-    </>
+    <article className="bg-black/40 backdrop-blur-sm rounded-lg border border-cyan-500/20 p-6 hover:border-cyan-400/40 transition-all duration-300 group cursor-pointer">
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+          {post.title}
+        </h3>
+        <span className="text-sm text-gray-400 whitespace-nowrap ml-4">
+          {post.readingTime} min read
+        </span>
+      </div>
+      <p className="text-gray-300 mb-4 leading-relaxed">
+        {post.excerpt}
+      </p>
+      <div className="flex justify-between items-center mb-4">
+        <time className="text-sm text-cyan-400">
+          {post.publishedAt.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}
+        </time>
+        <div className="flex items-center space-x-2">
+          {post.author.avatar && (
+            <img 
+              src={post.author.avatar} 
+              alt={post.author.name}
+              className="w-6 h-6 rounded-full"
+            />
+          )}
+          <span className="text-sm text-gray-400">{post.author.name}</span>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {post.tags.slice(0, 3).map((tag) => (
+          <span 
+            key={tag}
+            className="px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs rounded-full"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </article>
   );
 }
 
-// Individual section with multi-canvas layers
-function SectionView({ section, isActive }: { section: typeof SECTIONS[0], isActive: boolean }) {
-  const config = SECTION_CONFIGS[section.id];
-  const SectionComponent = section.component;
-  
-  return (
-    <section
-      id={`section-${section.id}`}
-      className={`section-container ${isActive ? 'active' : ''}`}
-      data-section={section.id}
-      style={{
-        height: '100vh',
-        position: 'relative',
-        display: isActive ? 'block' : 'none',
-      }}
-    >
-      {/* Multi-canvas layer system (5 layers per section) */}
-      <div className="relative w-full h-full">
-        <CanvasLayer 
-          id={section.id} 
-          layerType="background" 
-          blend="multiply"
-          opacity={0.8}
-        />
-        <CanvasLayer 
-          id={section.id} 
-          layerType="shadow" 
-          blend="overlay"
-          opacity={0.6}
-        />
-        <CanvasLayer 
-          id={section.id} 
-          layerType="content" 
-          blend="screen"
-          opacity={0.9}
-        />
-        <CanvasLayer 
-          id={section.id} 
-          layerType="highlight" 
-          blend="color-dodge"
-          opacity={0.4}
-        />
-        <CanvasLayer 
-          id={section.id} 
-          layerType="accent" 
-          blend="difference"
-          opacity={0.3}
-        />
-        
-        {/* Content overlay */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-          <div className="text-center max-w-4xl px-8">
-            <h1 className="text-6xl font-bold mb-4 holographic-text">
-              {section.name}
-            </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              {section.description}
-            </p>
-            
-            {/* Section-specific content */}
-            <Suspense fallback={<div className="holographic-spinner"><div className="spinner-ring"></div></div>}>
-              <SectionComponent />
-            </Suspense>
+// Section component
+function BlogSection({ section, isHero = false }: { section: BlogSection, isHero?: boolean }) {
+  if (isHero) {
+    return (
+      <section className="min-h-screen flex items-center justify-center relative z-10">
+        <div className="text-center max-w-4xl mx-auto px-6">
+          <h1 className="text-8xl font-black mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
+            {section.title}
+          </h1>
+          <h2 className="text-3xl font-light text-gray-200 mb-8">
+            {section.subtitle}
+          </h2>
+          <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+            {section.content}
+          </p>
+          <div className="mt-12">
+            <button 
+              onClick={() => document.getElementById('ai-news')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-8 py-4 rounded-lg font-medium hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105"
+            >
+              Explore Articles
+            </button>
           </div>
         </div>
+      </section>
+    );
+  }
+
+  const themeColors = section.theme ? {
+    from: section.theme.primaryColor + '40',
+    to: section.theme.primaryColor + '60'
+  } : { from: 'cyan-400', to: 'purple-400' };
+
+  return (
+    <section id={section.id} className="min-h-screen py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className={`text-6xl font-black mb-4 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent`}>
+            {section.title}
+          </h2>
+          <h3 className="text-2xl font-light text-gray-300 mb-6">
+            {section.subtitle}
+          </h3>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            {section.content}
+          </p>
+        </div>
+
+        {section.posts && section.posts.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {section.posts.map((post) => (
+              <ArticleCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
+
+        {(!section.posts || section.posts.length === 0) && (
+          <div className="text-center py-12">
+            <div className="text-gray-400">Loading articles...</div>
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
-// Main holographic interface
-export default function HolographicBlog() {
-  const [currentSection, setCurrentSection] = useState('home');
-  const [isInitialized, setIsInitialized] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const events = useEvents();
-  const homeParams = useHomeParams();
-  
-  // Initialize system
+// Navigation component
+function Navigation({ sections }: { sections: BlogSection[] }) {
+  const [activeSection, setActiveSection] = useState('hero');
+
   useEffect(() => {
-    // Initialize home parameters from PDF defaults
-    events.UPDATE_HOME({});
+    if (sections.length === 0) return;
     
-    // Setup device orientation listeners for 4D perspective
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-      if (event.alpha !== null && event.beta !== null && event.gamma !== null) {
-        const alpha = event.alpha || 0;
-        const beta = event.beta || 0;
-        const gamma = event.gamma || 0;
-        
-        // Map device orientation to CSS custom properties (from VIB34D study)
-        document.documentElement.style.setProperty('--device-alpha', `${alpha}`);
-        document.documentElement.style.setProperty('--device-beta', `${beta}`);
-        document.documentElement.style.setProperty('--device-gamma', `${gamma}`);
-        
-        // Calculate tilt intensity for extreme effects
-        const tiltIntensity = Math.min(1, Math.sqrt(
-          Math.pow(beta / 90, 2) + Math.pow(gamma / 90, 2)
-        ));
-        document.documentElement.style.setProperty('--tilt-intensity', `${tiltIntensity}`);
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+      
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (element && scrollPosition >= element.offsetTop && scrollPosition < element.offsetTop + element.offsetHeight) {
+          setActiveSection(section.id);
+          break;
+        }
       }
     };
-    
-    // Request device orientation permission (iOS 13+)
-    if (typeof DeviceOrientationEvent !== 'undefined' && 'requestPermission' in DeviceOrientationEvent) {
-      (DeviceOrientationEvent as any).requestPermission()
-        .then((response: string) => {
-          if (response === 'granted') {
-            window.addEventListener('deviceorientation', handleOrientation);
-          }
-        })
-        .catch(console.error);
-    } else {
-      window.addEventListener('deviceorientation', handleOrientation);
-    }
-    
-    // Animation loop for beat phase and parameter updates
-    const animate = () => {
-      events.TICK(0.016); // ~60fps tick
-      requestAnimationFrame(animate);
-    };
-    animate();
-    
-    // Beat clock (from PDF specification)
-    const beatInterval = setInterval(() => {
-      events.CLOCK_BEAT();
-    }, 2000); // 2-second beat interval
-    
-    // Initialize WebGL Manager
-    webglManager.setMaxContexts(4); // Allow up to 4 active contexts
-    
-    // Set up WebGL monitoring
-    webglManager.addEventListener('onCanvasLoad', (instance) => {
-      console.log(`[WebGL] Canvas loaded: ${instance.id} (${instance.sectionId}/${instance.layerType})`);
-    });
-    
-    webglManager.addEventListener('onCanvasDestroy', (instance) => {
-      console.log(`[WebGL] Canvas destroyed: ${instance.id} (${instance.sectionId}/${instance.layerType})`);
-    });
-    
-    webglManager.addEventListener('onMaxContextsReached', (count) => {
-      console.warn(`[WebGL] Max contexts reached: ${count}/4 - starting smart cleanup`);
-    });
-    
-    // Activate home section by default
-    webglManager.setSectionActive('home', true);
-    
-    setIsInitialized(true);
-    
-    return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
-      clearInterval(beatInterval);
-      webglManager.destroy();
-    };
-  }, [events]);
-  
-  // Update CSS custom properties when home parameters change
-  useEffect(() => {
-    Object.entries(homeParams).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(`--param-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`, `${value}`);
-    });
-  }, [homeParams]);
-  
-  // Navigation handler with WebGL choreography
-  const navigateToSection = (sectionId: string) => {
-    const previousSection = currentSection;
-    setCurrentSection(sectionId);
-    events.SET_FOCUS(sectionId);
-    
-    // Smart WebGL Context Management - trigger canvas loading/destruction
-    SECTIONS.forEach((section) => {
-      const isActive = section.id === sectionId;
-      webglManager.setSectionActive(section.id, isActive);
-    });
-    
-    console.log(`[Navigation] Section changed: ${previousSection} → ${sectionId}`);
-    console.log(`[WebGL] Active contexts:`, webglManager.getContextInfo());
-    
-    // Trigger section-specific transition
-    const config = SECTION_CONFIGS[sectionId];
-    if (config) {
-      // Apply transition-specific effects based on PDF specification
-      switch (config.transitionIn) {
-        case 'oppose_snap':
-          events.HOVER_START(sectionId);
-          break;
-        case 'morph_chaos_swap':
-          // Will be implemented in individual section components
-          break;
-        default:
-          break;
-      }
-    }
-  };
-  
-  if (!isInitialized) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center">
-        <div className="holographic-spinner">
-          <div className="spinner-ring"></div>
-          <div className="spinner-text">
-            Initializing Holographic Interface...
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [sections]);
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-cyan-500/20">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="text-2xl font-black text-cyan-400">
+            VIB3CODE
           </div>
+          
+          <div className="hidden md:flex space-x-8">
+            {sections.slice(1).map((section) => (
+              <button
+                key={section.id}
+                onClick={() => document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium transition-colors ${
+                  activeSection === section.id 
+                    ? 'text-cyan-400' 
+                    : 'text-gray-400 hover:text-cyan-300'
+                }`}
+              >
+                {section.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-400 hover:text-cyan-400 transition-colors">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+// Admin link (hidden, accessible via URL)
+function AdminLink() {
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      <button
+        onClick={() => window.location.href = '/admin'}
+        className="opacity-20 hover:opacity-100 transition-opacity duration-300 text-xs text-gray-500 hover:text-cyan-400"
+      >
+        Admin
+      </button>
+    </div>
+  );
+}
+
+export default function HomePage() {
+  const [sections, setSections] = useState<BlogSection[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        // Hero section (static content)
+        const heroSection: BlogSection = {
+          id: 'hero',
+          title: 'VIB3CODE',
+          subtitle: 'AI Research & Development Blog',
+          content: 'Exploring the frontiers of artificial intelligence, machine learning, and computational creativity.'
+        };
+
+        // Load content for each category
+        const categoryKeys = Object.keys(contentCategories) as (keyof typeof contentCategories)[];
+        const contentSections: BlogSection[] = [];
+
+        for (const categoryKey of categoryKeys) {
+          const category = contentCategories[categoryKey];
+          
+          try {
+            // Fetch posts for this category
+            const response = await fetch(`/api/posts?category=${categoryKey}&limit=6`);
+            const data = await response.json();
+            
+            contentSections.push({
+              id: categoryKey,
+              title: category.name.split(' &')[0], // Shorten for display
+              subtitle: category.name,
+              content: category.description,
+              posts: data.posts || [],
+              theme: category.holographicTheme
+            });
+          } catch (error) {
+            console.error(`Failed to load ${categoryKey} posts:`, error);
+            // Add section without posts
+            contentSections.push({
+              id: categoryKey,
+              title: category.name.split(' &')[0],
+              subtitle: category.name,
+              content: category.description,
+              posts: [],
+              theme: category.holographicTheme
+            });
+          }
+        }
+
+        setSections([heroSection, ...contentSections]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load content:', error);
+        setLoading(false);
+      }
+    };
+
+    loadContent();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white font-[family-name:var(--font-orbitron)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl font-bold text-cyan-400 mb-4 animate-pulse">VIB3CODE</div>
+          <div className="text-gray-400">Loading holographic blog...</div>
         </div>
       </div>
     );
   }
-  
+
   return (
-    <div ref={containerRef} className="holographic-interface">
-      {/* Holographic background system from globals.css */}
-      <div className="holographic-background"></div>
+    <div className="min-h-screen bg-black text-white font-[family-name:var(--font-orbitron)]">
+      <HolographicBackground />
+      <Navigation sections={sections} />
       
-      {/* Navigation */}
-      <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="flex space-x-4 bg-black/20 backdrop-blur-md rounded-full px-6 py-3 border border-white/10">
-          {SECTIONS.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => navigateToSection(section.id)}
-              className={`px-4 py-2 rounded-full transition-all duration-300 ${
-                currentSection === section.id
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
-                  : 'text-gray-400 hover:text-white hover:bg-white/10'
-              }`}
-              onMouseEnter={() => events.HOVER_START(section.id)}
-              onMouseLeave={() => events.HOVER_END(section.id)}
-            >
-              {section.name}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {/* Hero Section */}
+      {sections.length > 0 && (
+        <BlogSection section={sections[0]} isHero={true} />
+      )}
       
-      {/* Main content sections */}
-      <main className="relative">
-        {SECTIONS.map((section) => (
-          <SectionView
-            key={section.id}
-            section={section}
-            isActive={currentSection === section.id}
-          />
-        ))}
-      </main>
-      
-      {/* Parameter control panel */}
-      <Suspense fallback={null}>
-        <ParameterPanel />
-      </Suspense>
-      
-      {/* Scroll controller for GSAP + Lenis integration */}
-      <Suspense fallback={null}>
-        <ScrollController 
-          sections={SECTIONS.map(s => s.id)}
-          onSectionChange={navigateToSection}
-          currentSection={currentSection}
-        />
-      </Suspense>
+      {/* Content Sections */}
+      {sections.slice(1).map((section) => (
+        <BlogSection key={section.id} section={section} />
+      ))}
+
+      <AdminLink />
     </div>
   );
 }
