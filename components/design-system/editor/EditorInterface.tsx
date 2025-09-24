@@ -12,7 +12,7 @@ import { useDesignSystemContext } from '@/lib/design-system/context/provider';
 import { PresetCategory } from '@/lib/design-system/types/core';
 
 export function EditorInterface() {
-  const { currentState, updatePreset, presets } = useDesignSystemContext();
+  const { currentState, updatePreset, presets, isInitialized } = useDesignSystemContext();
   const [activeCategory, setActiveCategory] = useState<PresetCategory>('visualizer');
 
   const categories: { key: PresetCategory; label: string; color: string }[] = [
@@ -66,7 +66,8 @@ export function EditorInterface() {
                 <h4 className="font-semibold text-white">{preset.name}</h4>
                 <button
                   onClick={() => handlePresetChange(activeCategory, preset.name)}
-                  className="px-3 py-1 bg-cyan-500/30 text-cyan-200 rounded-full text-xs hover:bg-cyan-500/50 transition-colors"
+                  disabled={!isInitialized}
+                  className="px-3 py-1 bg-cyan-500/30 text-cyan-200 rounded-full text-xs hover:bg-cyan-500/50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Apply
                 </button>
@@ -114,6 +115,14 @@ export function EditorInterface() {
           <div>
             <span className="text-gray-400">Interactions:</span>
             <span className="text-emerald-200 ml-2">{currentState?.interactions?.activeInteractions || 0}</span>
+          </div>
+          <div>
+            <span className="text-gray-400">Last Interaction:</span>
+            <span className="text-emerald-200 ml-2">{currentState?.interactions?.lastInteractionType || 'none'}</span>
+          </div>
+          <div>
+            <span className="text-gray-400">Transition:</span>
+            <span className="text-emerald-200 ml-2">{currentState?.transitions?.currentTransition || 'idle'}</span>
           </div>
         </div>
       </div>

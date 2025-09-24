@@ -10,6 +10,12 @@ export interface VIB34DEngine {
   initialize(): Promise<void>;
   updatePreset(category: PresetCategory, name: string): void;
   getCurrentState(): SystemState;
+  getAvailablePresets(): PresetCollection;
+  getActivePresets(): PresetSelections;
+  getInteractionCoordinator(): InteractionCoordinator;
+  getTransitionCoordinator(): TransitionCoordinator;
+  subscribe(listener: (state: SystemState) => void): () => void;
+  onPresetsChange(listener: (collection: PresetCollection) => void): () => void;
   dispose(): void;
 }
 
@@ -29,12 +35,24 @@ export interface VisualizerState {
   frameRate: number;
 }
 
+export type InteractionEventType = 'hover' | 'click' | 'scroll';
+
 export interface InteractionState {
   hoverEffect: string;
   clickEffect: string;
   scrollEffect: string;
   sensitivity: number;
   activeInteractions: number;
+  lastInteractionType: InteractionEventType | null;
+  lastInteractionTime: number | null;
+}
+
+export interface InteractionActivity {
+  activeCount: number;
+  lastEvent: {
+    type: InteractionEventType;
+    timestamp: number;
+  } | null;
 }
 
 export interface TransitionState {
@@ -43,6 +61,22 @@ export interface TransitionState {
   duration: number;
   easing: string;
   activeTransitions: string[];
+  currentTransition: string | null;
+  lastTransition: TransitionHistoryEntry | null;
+}
+
+export interface TransitionHistoryEntry {
+  name: string;
+  from: string;
+  to: string;
+  startedAt: number;
+  completedAt?: number;
+}
+
+export interface TransitionActivity {
+  activeTransitions: string[];
+  currentTransition: string | null;
+  lastTransition: TransitionHistoryEntry | null;
 }
 
 export interface PerformanceMetrics {
@@ -62,6 +96,10 @@ export interface PresetDefinition {
   metadata: PresetMetadata;
 }
 
+export type PresetCollection = Record<PresetCategory, PresetDefinition[]>;
+
+export type PresetSelections = Record<PresetCategory, string | null>;
+
 export interface PresetMetadata {
   description: string;
   performance: 'low' | 'medium' | 'high';
@@ -70,10 +108,18 @@ export interface PresetMetadata {
 }
 
 // Coordinator Types
+export interface InteractionCoordinatorSettings {
+  sensitivity?: number;
+}
+
 export interface InteractionCoordinator {
-  registerHoverHandler(element: HTMLElement, config: HoverConfig): void;
-  registerClickHandler(element: HTMLElement, config: ClickConfig): void;
-  registerScrollHandler(element: HTMLElement, config: ScrollConfig): void;
+  registerHoverHandler(element: HTMLElement, config: HoverConfig): () => void;
+  registerClickHandler(element: HTMLElement, config: ClickConfig): () => void;
+  registerScrollHandler(element: HTMLElement, config: ScrollConfig): () => void;
+  configure(settings: InteractionCoordinatorSettings): void;
+  getActiveInteractions(): number;
+  getActivitySnapshot(): InteractionActivity;
+  subscribe(listener: (activity: InteractionActivity) => void): () => void;
   cleanup(): void;
 }
 
@@ -81,6 +127,10 @@ export interface TransitionCoordinator {
   executeTransition(from: string, to: string, config: TransitionConfig): Promise<void>;
   registerTransition(name: string, config: TransitionConfig): void;
   getCurrentTransition(): string | null;
+  getActiveTransitions(): string[];
+  getActivitySnapshot(): TransitionActivity;
+  subscribe(listener: (activity: TransitionActivity) => void): () => void;
+  cleanup(): void;
 }
 
 export interface HoverConfig {
