@@ -1,0 +1,26 @@
+{
+  "name": "vib3code-0",
+  "version": "0.1.0",
+  "private": true,
+  "paulPhillipsSignature": "A Paul Phillips Manifestation - The Revolution Will Not be in a Structured Format",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.5.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.19",
+    "@types/react": "18.2.46",
+    "@types/react-dom": "18.2.17",
+    "eslint": "9.13.0",
+    "eslint-config-next": "15.5.4",
+    "typescript": "5.3.3"
+  }
+}

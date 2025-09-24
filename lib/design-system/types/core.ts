@@ -10,6 +10,10 @@ export interface VIB34DEngine {
   initialize(): Promise<void>;
   updatePreset(category: PresetCategory, name: string): void;
   getCurrentState(): SystemState;
+  getAvailablePresets(): PresetCollection;
+  getActivePresets(): PresetSelections;
+  subscribe(listener: (state: SystemState) => void): () => void;
+  onPresetsChange(listener: (collection: PresetCollection) => void): () => void;
   dispose(): void;
 }
 
@@ -62,6 +66,10 @@ export interface PresetDefinition {
   metadata: PresetMetadata;
 }
 
+export type PresetCollection = Record<PresetCategory, PresetDefinition[]>;
+
+export type PresetSelections = Record<PresetCategory, string | null>;
+
 export interface PresetMetadata {
   description: string;
   performance: 'low' | 'medium' | 'high';
@@ -71,16 +79,23 @@ export interface PresetMetadata {
 
 // Coordinator Types
 export interface InteractionCoordinator {
+  applyPreset(preset: PresetDefinition | null): void;
   registerHoverHandler(element: HTMLElement, config: HoverConfig): void;
   registerClickHandler(element: HTMLElement, config: ClickConfig): void;
   registerScrollHandler(element: HTMLElement, config: ScrollConfig): void;
+  subscribeActiveInteractions(listener: (count: number) => void): () => void;
+  getActiveInteractions(): number;
   cleanup(): void;
 }
 
 export interface TransitionCoordinator {
+  applyPreset(preset: PresetDefinition | null): void;
   executeTransition(from: string, to: string, config: TransitionConfig): Promise<void>;
   registerTransition(name: string, config: TransitionConfig): void;
   getCurrentTransition(): string | null;
+  getActiveTransitions(): string[];
+  subscribeActiveTransitions(listener: (active: string[]) => void): () => void;
+  cleanup(): void;
 }
 
 export interface HoverConfig {

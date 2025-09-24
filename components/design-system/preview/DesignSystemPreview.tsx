@@ -7,34 +7,23 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDesignSystemContext } from '@/lib/design-system/context/provider';
 
 export function DesignSystemPreview() {
-  const { currentState, engine } = useDesignSystemContext();
+  const { currentState, engine, isInitialized } = useDesignSystemContext();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const initializePreview = async () => {
-      if (!canvasRef.current || !engine) return;
-
-      try {
-        await engine.initialize();
-        setIsInitialized(true);
-      } catch (error) {
-        console.error('Failed to initialize preview:', error);
-      }
-    };
-
-    initializePreview();
-
-    return () => {
-      if (engine) {
-        engine.dispose();
-      }
-    };
-  }, [engine]);
+    if (!canvasRef.current || !engine || !isInitialized) return;
+    const context = canvasRef.current.getContext('2d');
+    if (!context) return;
+    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    context.fillStyle = 'rgba(56, 189, 248, 0.35)';
+    context.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    context.fillStyle = 'rgba(15, 118, 110, 0.65)';
+    context.fillRect(0, canvasRef.current.height - 6, canvasRef.current.width, 6);
+  }, [engine, isInitialized]);
 
   const demoCards = [
     {
