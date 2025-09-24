@@ -10,6 +10,10 @@ export interface VIB34DEngine {
   initialize(): Promise<void>;
   updatePreset(category: PresetCategory, name: string): void;
   getCurrentState(): SystemState;
+  getAvailablePresets(): PresetCollection;
+  getActivePresets(): PresetSelections;
+  subscribe(listener: (state: SystemState) => void): () => void;
+  onPresetsChange(listener: (collection: PresetCollection) => void): () => void;
   dispose(): void;
 }
 
@@ -61,6 +65,10 @@ export interface PresetDefinition {
   parameters: Record<string, any>;
   metadata: PresetMetadata;
 }
+
+export type PresetCollection = Record<PresetCategory, PresetDefinition[]>;
+
+export type PresetSelections = Record<PresetCategory, string | null>;
 
 export interface PresetMetadata {
   description: string;
