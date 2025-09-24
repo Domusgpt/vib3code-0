@@ -1,0 +1,48 @@
+{
+  "page_transitions": {
+    "fade_cross": {
+      "outgoing": "fade_to_black",
+      "incoming": "fade_from_black",
+      "overlap": "200ms",
+      "easing": "ease_in_out"
+    },
+    "slide_portal": {
+      "outgoing": "slide_to_edge_dissolve",
+      "incoming": "slide_from_opposite_edge",
+      "overlap": "300ms",
+      "easing": "cubic_bezier_custom"
+    },
+    "spiral_morph": {
+      "outgoing": "spiral_collapse_to_center",
+      "incoming": "spiral_emerge_from_center",
+      "overlap": "400ms",
+      "easing": "ease_out_expo"
+    },
+    "glitch_burst": {
+      "outgoing": "vhs_glitch_dissolve",
+      "incoming": "chromatic_aberration_emerge",
+      "overlap": "150ms",
+      "easing": "ease_in_bounce"
+    }
+  },
+  "card_transitions": {
+    "gentle_emerge": {
+      "from": "background_layer",
+      "animation": "translucency_and_scale",
+      "duration": "800ms",
+      "easing": "ease_out_quart"
+    },
+    "dramatic_burst": {
+      "from": "screen_center",
+      "animation": "explosive_scale_and_spin",
+      "duration": "1200ms",
+      "easing": "ease_out_back"
+    },
+    "liquid_flow": {
+      "from": "edge_of_screen",
+      "animation": "fluid_morph_and_settle",
+      "duration": "1500ms",
+      "easing": "ease_out_elastic"
+    }
+  }
+}
