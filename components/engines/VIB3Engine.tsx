@@ -10,7 +10,7 @@
 'use client';
 
 import { useRef, useEffect, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { ThreeEvent, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { createVIB3Geometry, VIB3GeometryParams } from '@/lib/vib34d-geometries';
 
@@ -20,14 +20,20 @@ interface VIB3EngineProps {
   params: VIB3GeometryParams;
   opacity?: number;
   pointSize?: number;
+  onPointerOver?: (event: ThreeEvent<PointerEvent>) => void;
+  onPointerOut?: (event: ThreeEvent<PointerEvent>) => void;
+  onClick?: (event: ThreeEvent<MouseEvent>) => void;
 }
 
-export function VIB3Engine({ 
-  sectionId, 
-  layerType, 
-  params, 
+export function VIB3Engine({
+  sectionId,
+  layerType,
+  params,
   opacity = 1.0,
-  pointSize = 2.0
+  pointSize = 2.0,
+  onPointerOver,
+  onPointerOut,
+  onClick
 }: VIB3EngineProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const materialRef = useRef<THREE.PointsMaterial>(null);
@@ -121,7 +127,12 @@ export function VIB3Engine({
   }, [layerType]);
 
   return (
-    <group position={layerOffset}>
+    <group
+      position={layerOffset}
+      onPointerOver={onPointerOver}
+      onPointerOut={onPointerOut}
+      onClick={onClick}
+    >
       <points 
         ref={pointsRef}
         geometry={geometry}
