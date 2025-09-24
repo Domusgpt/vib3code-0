@@ -56,7 +56,19 @@ export function VIB3GeometryRenderer({
       fallback.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       return fallback;
     }
-  }, [sectionId, layerType, params?.geometry, params?.morph, params?.chaos, params?.density]);
+  }, [
+    sectionId,
+    layerType,
+    params?.geometry,
+    params?.morph,
+    params?.chaos,
+    params?.density,
+    params?.hue,
+    params?.noiseFreq,
+    params?.dispAmp,
+    params?.timeScale,
+    params?.beatPhase,
+  ]);
 
   // Layer-specific properties
   const layerProps = useMemo(() => {
