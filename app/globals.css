@@ -363,3 +363,12 @@ body {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+@keyframes holoMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
