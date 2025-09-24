@@ -363,3 +363,25 @@ body {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+@keyframes backgroundOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gridDrift {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  50% {
+    background-position: 40px 60px, -40px -60px;
+  }
+  100% {
+    background-position: 0 0, 0 0;
+  }
+}
+
