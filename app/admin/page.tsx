@@ -1,6 +1,9 @@
 /**
  * VIB3CODE-0 Admin Dashboard
- * 
+ * A Paul Phillips Manifestation - Paul@clearseassolutions.com
+ * "The Revolution Will Not be in a Structured Format"
+ * © 2025 Paul Phillips - Clear Seas Solutions LLC
+ *
  * Owner/Editor control panel for:
  * - Holographic parameter controls
  * - Content management
@@ -10,7 +13,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Parameter control component
 function ParameterControl({ 

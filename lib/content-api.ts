@@ -1,6 +1,9 @@
 /**
  * VIB3CODE-0 Content API
- * 
+ * A Paul Phillips Manifestation - Paul@clearseassolutions.com
+ * "The Revolution Will Not be in a Structured Format"
+ * © 2025 Paul Phillips - Clear Seas Solutions LLC
+ *
  * Unified content management system that can integrate with:
  * - Headless CMS (Sanity, Strapi, Contentful)
  * - Local MDX files for development
@@ -126,19 +129,20 @@ export class MDXContentProvider implements ContentProvider {
   private loadMDXFiles() {
     // Mock data for now - in production, read from /content directory
     this.posts = [
+      // AI News & Research Posts
       {
         id: '1',
         title: 'The Future of Large Language Models',
         slug: 'future-of-llms',
         excerpt: 'Exploring the next generation of AI language models and their potential impact on society.',
-        content: `# The Future of Large Language Models\n\nLarge Language Models (LLMs) have revolutionized...`,
+        content: `# The Future of Large Language Models\n\nLarge Language Models (LLMs) have revolutionized artificial intelligence, transforming how we interact with machines and process information. As we stand on the brink of even more sophisticated AI systems, the implications for society, technology, and human creativity are profound.\n\n## Current State of LLMs\n\nToday's models like GPT-4, Claude, and PaLM represent significant achievements in natural language processing. These systems demonstrate remarkable capabilities in reasoning, creativity, and knowledge synthesis.\n\n## What's Next?\n\nThe future holds promise for multimodal models, improved reasoning capabilities, and more efficient architectures that could democratize AI access globally.`,
         author: {
           name: 'AI Research Team',
           avatar: '/avatars/ai-team.jpg'
         },
-        publishedAt: new Date('2025-09-05'),
-        updatedAt: new Date('2025-09-05'),
-        tags: ['AI', 'LLM', 'Research'],
+        publishedAt: new Date('2024-09-20'),
+        updatedAt: new Date('2024-09-20'),
+        tags: ['AI', 'LLM', 'Research', 'GPT-4'],
         category: 'ai-news',
         readingTime: 8,
         seo: {
@@ -147,6 +151,144 @@ export class MDXContentProvider implements ContentProvider {
           ogImage: '/og/future-of-llms.jpg'
         },
         holographicParams: contentCategories['ai-news'].holographicTheme
+      },
+      {
+        id: '2',
+        title: 'Breakthrough in Multimodal AI: Vision-Language Models',
+        slug: 'multimodal-ai-breakthrough',
+        excerpt: 'Recent advances in vision-language models are reshaping how AI understands and interacts with visual content.',
+        content: `# Breakthrough in Multimodal AI\n\nThe convergence of vision and language understanding in AI systems marks a pivotal moment in artificial intelligence research. These multimodal models can simultaneously process text, images, and even video content.\n\n## Technical Innovations\n\nRecent breakthroughs include improved attention mechanisms, better cross-modal alignment, and more efficient training methodologies.\n\n## Real-World Applications\n\nFrom medical imaging analysis to creative content generation, these models are finding applications across diverse industries.`,
+        author: {
+          name: 'Vision AI Lab',
+          avatar: '/avatars/vision-lab.jpg'
+        },
+        publishedAt: new Date('2024-09-18'),
+        updatedAt: new Date('2024-09-18'),
+        tags: ['AI', 'Computer Vision', 'Multimodal', 'Deep Learning'],
+        category: 'ai-news',
+        readingTime: 6,
+        seo: {
+          metaTitle: 'Breakthrough in Multimodal AI - VIB3CODE',
+          metaDescription: 'Recent advances in vision-language models are reshaping AI understanding.',
+          ogImage: '/og/multimodal-ai.jpg'
+        },
+        holographicParams: contentCategories['ai-news'].holographicTheme
+      },
+
+      // Creative Programming Posts
+      {
+        id: '3',
+        title: 'Generative Art with WebGL Shaders',
+        slug: 'webgl-generative-art',
+        excerpt: 'Diving deep into fragment shaders and mathematical beauty for creating stunning visual experiences.',
+        content: `# Generative Art with WebGL Shaders\n\nWebGL shaders offer a powerful canvas for creative expression, allowing artists and programmers to create stunning visual experiences that run at 60fps in the browser.\n\n## The Mathematics of Beauty\n\nGenerative art often relies on mathematical functions, noise algorithms, and procedural techniques to create emergent patterns and forms.\n\n## Fragment Shader Techniques\n\nFrom simple color gradients to complex fractal systems, fragment shaders provide the tools for real-time visual creation.\n\n## Getting Started\n\nThis guide will walk you through creating your first generative art piece using WebGL and modern shader techniques.`,
+        author: {
+          name: 'Creative Code Collective',
+          avatar: '/avatars/creative-code.jpg'
+        },
+        publishedAt: new Date('2024-09-15'),
+        updatedAt: new Date('2024-09-15'),
+        tags: ['WebGL', 'Shaders', 'Generative Art', 'Creative Coding'],
+        category: 'vibe-coding',
+        readingTime: 12,
+        seo: {
+          metaTitle: 'Generative Art with WebGL Shaders - VIB3CODE',
+          metaDescription: 'Learn to create stunning visual experiences with fragment shaders.',
+          ogImage: '/og/webgl-art.jpg'
+        },
+        holographicParams: contentCategories['vibe-coding'].holographicTheme
+      },
+      {
+        id: '4',
+        title: 'Building Interactive 4D Visualizations',
+        slug: '4d-visualizations',
+        excerpt: 'Exploring higher-dimensional mathematics through interactive web experiences and holographic projections.',
+        content: `# Building Interactive 4D Visualizations\n\nFour-dimensional geometry presents unique challenges and opportunities for creative expression. By projecting 4D objects into 3D space, we can create mesmerizing interactive experiences.\n\n## Mathematical Foundations\n\nUnderstanding 4D rotations, hypercubes, and polytopes requires a solid grasp of linear algebra and geometric transformations.\n\n## Implementation Strategies\n\nUsing React Three Fiber and custom shaders, we can build performant 4D visualization systems that respond to user input in real-time.\n\n## Interactive Examples\n\nThis article includes interactive demos showing tesseracts, 4D spheres, and complex polytopes in action.`,
+        author: {
+          name: 'Dimensional Systems Lab',
+          avatar: '/avatars/4d-lab.jpg'
+        },
+        publishedAt: new Date('2024-09-12'),
+        updatedAt: new Date('2024-09-12'),
+        tags: ['4D Visualization', '3D Graphics', 'Mathematics', 'Interactive'],
+        category: 'vibe-coding',
+        readingTime: 15,
+        seo: {
+          metaTitle: 'Building Interactive 4D Visualizations - VIB3CODE',
+          metaDescription: 'Explore higher-dimensional mathematics through interactive web experiences.',
+          ogImage: '/og/4d-viz.jpg'
+        },
+        holographicParams: contentCategories['vibe-coding'].holographicTheme
+      },
+
+      // Information Theory Posts
+      {
+        id: '5',
+        title: 'Shannon Entropy and AI Information Processing',
+        slug: 'shannon-entropy-ai',
+        excerpt: 'How information theory principles guide the development of more efficient AI architectures.',
+        content: `# Shannon Entropy and AI Information Processing\n\nClaude Shannon's groundbreaking work on information theory continues to influence modern AI development, particularly in understanding how neural networks process and compress information.\n\n## Information-Theoretic Foundations\n\nEntropy measures the uncertainty in information, providing crucial insights into optimal data representation and compression.\n\n## Applications in Neural Networks\n\nFrom attention mechanisms to knowledge distillation, information theory guides the development of more efficient AI architectures.\n\n## Future Directions\n\nEmerging research explores how information-theoretic principles can improve model interpretability and reduce computational requirements.`,
+        author: {
+          name: 'Information Theory Research Group',
+          avatar: '/avatars/info-theory.jpg'
+        },
+        publishedAt: new Date('2024-09-10'),
+        updatedAt: new Date('2024-09-10'),
+        tags: ['Information Theory', 'Shannon Entropy', 'Neural Networks', 'Compression'],
+        category: 'info-theory',
+        readingTime: 9,
+        seo: {
+          metaTitle: 'Shannon Entropy and AI Information Processing - VIB3CODE',
+          metaDescription: 'How information theory principles guide AI architecture development.',
+          ogImage: '/og/shannon-entropy.jpg'
+        },
+        holographicParams: contentCategories['info-theory'].holographicTheme
+      },
+
+      // Philosophy & Ethics Posts
+      {
+        id: '6',
+        title: 'The Ethics of Artificial General Intelligence',
+        slug: 'agi-ethics',
+        excerpt: 'Examining the moral implications and societal challenges posed by the development of AGI systems.',
+        content: `# The Ethics of Artificial General Intelligence\n\nAs we approach the possibility of Artificial General Intelligence (AGI), we must grapple with profound ethical questions that will shape the future of humanity.\n\n## Core Ethical Challenges\n\nFrom alignment problems to societal displacement, AGI presents unprecedented challenges that require careful consideration and proactive solutions.\n\n## Philosophical Frameworks\n\nExploring different ethical frameworks - utilitarian, deontological, and virtue ethics - in the context of AGI development.\n\n## The Path Forward\n\nBuilding AGI systems that are aligned with human values requires interdisciplinary collaboration and ongoing dialogue between technologists, philosophers, and society at large.`,
+        author: {
+          name: 'AI Ethics Institute',
+          avatar: '/avatars/ethics.jpg'
+        },
+        publishedAt: new Date('2024-09-08'),
+        updatedAt: new Date('2024-09-08'),
+        tags: ['AGI', 'AI Ethics', 'Philosophy', 'Society'],
+        category: 'philosophy',
+        readingTime: 11,
+        seo: {
+          metaTitle: 'The Ethics of Artificial General Intelligence - VIB3CODE',
+          metaDescription: 'Examining moral implications of AGI development for society.',
+          ogImage: '/og/agi-ethics.jpg'
+        },
+        holographicParams: contentCategories['philosophy'].holographicTheme
+      },
+      {
+        id: '7',
+        title: 'Consciousness and Machine Intelligence',
+        slug: 'consciousness-machine-intelligence',
+        excerpt: 'Exploring the hard problem of consciousness in the context of artificial intelligence and machine cognition.',
+        content: `# Consciousness and Machine Intelligence\n\nThe question of machine consciousness sits at the intersection of philosophy, cognitive science, and artificial intelligence research. As our AI systems become more sophisticated, we must examine what it means to be conscious.\n\n## The Hard Problem of Consciousness\n\nDavid Chalmers' formulation of the hard problem challenges us to understand subjective experience and its relationship to physical processes.\n\n## Machine Consciousness Theories\n\nFrom integrated information theory to global workspace theory, various frameworks attempt to explain consciousness in computational terms.\n\n## Implications for AI Development\n\nUnderstanding consciousness (or its absence) in AI systems has profound implications for how we design, deploy, and interact with intelligent machines.`,
+        author: {
+          name: 'Consciousness Studies Lab',
+          avatar: '/avatars/consciousness.jpg'
+        },
+        publishedAt: new Date('2024-09-05'),
+        updatedAt: new Date('2024-09-05'),
+        tags: ['Consciousness', 'Philosophy of Mind', 'AI', 'Cognitive Science'],
+        category: 'philosophy',
+        readingTime: 13,
+        seo: {
+          metaTitle: 'Consciousness and Machine Intelligence - VIB3CODE',
+          metaDescription: 'Exploring the hard problem of consciousness in AI systems.',
+          ogImage: '/og/consciousness.jpg'
+        },
+        holographicParams: contentCategories['philosophy'].holographicTheme
       }
     ];
   }
