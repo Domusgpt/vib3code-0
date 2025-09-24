@@ -1,0 +1,62 @@
+{
+  "collections": {
+    "minimal": {
+      "label": "Minimal Vector Flow",
+      "description": "Sparse lattice, subdued motion, monochromatic glow",
+      "density": "minimal",
+      "speed": "calm",
+      "reactivity": "passive",
+      "color": "monochrome"
+    },
+    "standard": {
+      "label": "Standard Continuum",
+      "description": "Balanced grid suitable for editorial layouts",
+      "density": "standard",
+      "speed": "flowing",
+      "reactivity": "responsive",
+      "color": "complementary"
+    },
+    "dense": {
+      "label": "Dense Harmonic Field",
+      "description": "Rich particle clustering with energetic motion",
+      "density": "dense",
+      "speed": "energetic",
+      "reactivity": "highly_reactive",
+      "color": "triadic"
+    },
+    "maximum": {
+      "label": "Maximum Spectrum Storm",
+      "description": "Hyper-dense structure with extreme responsiveness",
+      "density": "maximum",
+      "speed": "frenetic",
+      "reactivity": "hypersensitive",
+      "color": "rainbow"
+    }
+  },
+  "density_presets": {
+    "minimal": { "base": 4.0, "variation": 1.0 },
+    "standard": { "base": 8.0, "variation": 2.0 },
+    "dense": { "base": 16.0, "variation": 4.0 },
+    "maximum": { "base": 32.0, "variation": 8.0 }
+  },
+  "speed_presets": {
+    "static": { "base": 0.0, "variation": 0.0 },
+    "calm": { "base": 0.3, "variation": 0.1 },
+    "flowing": { "base": 0.6, "variation": 0.2 },
+    "energetic": { "base": 1.2, "variation": 0.4 },
+    "frenetic": { "base": 2.0, "variation": 0.8 }
+  },
+  "reactivity_presets": {
+    "passive": { "mouse": 0.2, "click": 0.1, "scroll": 0.1 },
+    "responsive": { "mouse": 0.6, "click": 0.4, "scroll": 0.3 },
+    "highly_reactive": { "mouse": 1.0, "click": 0.8, "scroll": 0.6 },
+    "hypersensitive": { "mouse": 1.5, "click": 1.2, "scroll": 1.0 }
+  },
+  "color_presets": {
+    "monochrome": { "palette": "single_hue_variations", "description": "Variable luminance with single hue focus" },
+    "complementary": { "palette": "opposite_color_wheel", "description": "Dual-tone pair with energetic contrast" },
+    "triadic": { "palette": "three_equidistant_hues", "description": "Three-hue harmonic progression" },
+    "analogous": { "palette": "adjacent_color_wheel", "description": "Neighbor hue drift for calm blends" },
+    "rainbow": { "palette": "full_spectrum_cycle", "description": "Continuous full-spectrum cycling" }
+  }
+}

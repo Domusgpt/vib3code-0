@@ -1,0 +1,74 @@
+{
+  "collections": {
+    "subtle_glow": {
+      "label": "Subtle Glow Set",
+      "hover": "subtle_glow",
+      "click": "color_inversion",
+      "scroll": "momentum_trails"
+    },
+    "magnetic_attraction": {
+      "label": "Magnetic Attraction Set",
+      "hover": "magnetic_attraction",
+      "click": "reality_glitch",
+      "scroll": "harmonic_resonance"
+    },
+    "reality_distortion": {
+      "label": "Reality Distortion Set",
+      "hover": "reality_distortion",
+      "click": "quantum_collapse",
+      "scroll": "chaos_buildup"
+    }
+  },
+  "hover_effects": {
+    "subtle_glow": {
+      "target_enhancement": "soft_luminous_glow",
+      "others_response": "slight_dimming",
+      "transition_speed": "fast"
+    },
+    "magnetic_attraction": {
+      "target_enhancement": "density_increase_with_pull_effect",
+      "others_response": "density_decrease_with_push_effect",
+      "transition_speed": "medium"
+    },
+    "reality_distortion": {
+      "target_enhancement": "geometry_warping_and_color_shift",
+      "others_response": "stability_compensation",
+      "transition_speed": "slow"
+    }
+  },
+  "click_effects": {
+    "color_inversion": {
+      "type": "spectrum_flip",
+      "duration": "2000ms",
+      "decay": "exponential"
+    },
+    "reality_glitch": {
+      "type": "digital_artifact_generation",
+      "duration": "1500ms",
+      "decay": "linear"
+    },
+    "quantum_collapse": {
+      "type": "parameter_randomization_then_stabilization",
+      "duration": "3000ms",
+      "decay": "sigmoid"
+    }
+  },
+  "scroll_effects": {
+    "momentum_trails": {
+      "type": "motion_blur_with_particle_generation",
+      "intensity": "velocity_based",
+      "decay": "physics_based"
+    },
+    "chaos_buildup": {
+      "type": "progressive_distortion_with_threshold",
+      "threshold": "5_scroll_events",
+      "buildup": "exponential",
+      "release": "portal_burst"
+    },
+    "harmonic_resonance": {
+      "type": "coordinated_frequency_modulation",
+      "synchronization": "all_visualizers",
+      "pattern": "mathematical_wave_function"
+    }
+  }
+}

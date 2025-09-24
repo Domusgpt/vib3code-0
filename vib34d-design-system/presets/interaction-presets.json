@@ -1,0 +1,128 @@
+{
+  "profiles": {
+    "passive": {
+      "label": "Passive Field",
+      "description": "Calm response suitable for low-motion layouts",
+      "reactivityPreset": "passive",
+      "hoverMultiplier": 0.6,
+      "clickMultiplier": 0.5,
+      "scrollMultiplier": 0.5
+    },
+    "responsive": {
+      "label": "Responsive Flux",
+      "description": "Balanced reactivity for editorial interactions",
+      "reactivityPreset": "responsive",
+      "hoverMultiplier": 1.0,
+      "clickMultiplier": 1.0,
+      "scrollMultiplier": 1.0
+    },
+    "highly_reactive": {
+      "label": "Highly Reactive",
+      "description": "Intense interactions with strong visual feedback",
+      "reactivityPreset": "highly_reactive",
+      "hoverMultiplier": 1.3,
+      "clickMultiplier": 1.2,
+      "scrollMultiplier": 1.1
+    },
+    "hypersensitive": {
+      "label": "Hypersensitive",
+      "description": "Experimental maximum response envelope",
+      "reactivityPreset": "hypersensitive",
+      "hoverMultiplier": 1.6,
+      "clickMultiplier": 1.5,
+      "scrollMultiplier": 1.4
+    }
+  },
+  "hover_response": {
+    "target": {
+      "gridDensity": "increase_2x",
+      "colorIntensity": "increase_1.5x",
+      "reactivity": "increase_1.3x",
+      "depth": "lift_forward_10px"
+    },
+    "others": {
+      "gridDensity": "decrease_0.5x",
+      "colorIntensity": "decrease_0.8x",
+      "reactivity": "decrease_0.7x",
+      "depth": "push_back_5px"
+    },
+    "transition": {
+      "duration": "300ms",
+      "easing": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+      "stagger": "50ms"
+    }
+  },
+  "click_response": {
+    "immediate": {
+      "colorInversion": "full_spectrum",
+      "variableInversion": {
+        "speed": "reverse_direction",
+        "density": "inverse_value",
+        "intensity": "flip_polarity"
+      },
+      "rippleEffect": "radial_burst",
+      "sparkleGeneration": "8_particles"
+    },
+    "duration": {
+      "inversion": "2000ms",
+      "decay": "500ms",
+      "sparkles": "1500ms"
+    }
+  },
+  "scrollable_cards": {
+    "grid_layout": {
+      "columns": "auto-fit(minmax(250px, 1fr))",
+      "gap": "20px",
+      "scroll_behavior": "smooth",
+      "scroll_snap": "y_mandatory",
+      "virtualization": "enabled_for_performance"
+    },
+    "scroll_interactions": {
+      "visualizer_response": {
+        "scroll_up": "increase_grid_density",
+        "scroll_down": "decrease_grid_density",
+        "scroll_velocity": "affects_animation_speed",
+        "scroll_momentum": "creates_trailing_effects"
+      },
+      "content_behavior": {
+        "snap_points": "every_3_items",
+        "momentum_scrolling": "ios_style",
+        "edge_bouncing": "subtle_elastic"
+      }
+    }
+  },
+  "video_expansion": {
+    "expansion_states": {
+      "thumbnail": {
+        "size": "100%_of_card",
+        "visualizer_role": "background_ambient",
+        "play_button_overlay": "center_with_glow"
+      },
+      "playing": {
+        "size": "150%_of_original",
+        "z_index": "1000",
+        "background_blur": "other_elements",
+        "visualizer_role": "audio_reactive",
+        "controls": "floating_transparent"
+      },
+      "fullscreen": {
+        "size": "100vw_100vh",
+        "background": "pure_black",
+        "visualizer_role": "immersive_audio_visual",
+        "controls": "minimal_overlay"
+      }
+    },
+    "transitions": {
+      "thumbnail_to_playing": {
+        "duration": "500ms",
+        "easing": "ease_out_expo",
+        "visualizer_morph": "ambient_to_audio_reactive"
+      },
+      "playing_to_fullscreen": {
+        "duration": "300ms",
+        "easing": "ease_in_out",
+        "visualizer_morph": "audio_reactive_to_immersive"
+      }
+    }
+  }
+}
