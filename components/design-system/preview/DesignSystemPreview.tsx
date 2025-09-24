@@ -7,34 +7,46 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDesignSystemContext } from '@/lib/design-system/context/provider';
 
 export function DesignSystemPreview() {
-  const { currentState, engine } = useDesignSystemContext();
+  const { currentState, isInitialized } = useDesignSystemContext();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const initializePreview = async () => {
-      if (!canvasRef.current || !engine) return;
+    if (!canvasRef.current || !isInitialized || !currentState) {
+      return;
+    }
 
-      try {
-        await engine.initialize();
-        setIsInitialized(true);
-      } catch (error) {
-        console.error('Failed to initialize preview:', error);
-      }
-    };
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (!context) return;
 
-    initializePreview();
+    const { visualizer } = currentState;
+    const { density, speed, reactivity, particleCount } = visualizer;
 
-    return () => {
-      if (engine) {
-        engine.dispose();
-      }
-    };
-  }, [engine]);
+    const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, 'rgba(34,211,238,0.45)');
+    gradient.addColorStop(1, 'rgba(168,85,247,0.35)');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const totalParticles = Math.max(12, Math.min(120, Math.round(particleCount / 15)));
+    const baseRadius = Math.max(1, Math.min(6, density * 12));
+
+    for (let i = 0; i < totalParticles; i += 1) {
+      const progress = i / totalParticles;
+      const x = (Math.sin(progress * 83 + speed) + 1) / 2 * canvas.width;
+      const y = (Math.cos(progress * 71 + reactivity) + 1) / 2 * canvas.height;
+      const radius = baseRadius * (1 + Math.sin(progress * 12 + reactivity) * 0.5);
+
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2);
+      context.fillStyle = `rgba(255,255,255,${0.25 + progress * 0.35})`;
+      context.fill();
+    }
+  }, [currentState, isInitialized]);
 
   const demoCards = [
     {

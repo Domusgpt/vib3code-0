@@ -1,0 +1,21 @@
+/*
+ * VIB34D Design System - Global Stylesheet
+ * A Paul Phillips Manifestation - Paul@clearseassolutions.com
+ * "The Revolution Will Not be in a Structured Format"
+ * © 2025 Paul Phillips - Clear Seas Solutions LLC
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-black text-white;
+}
+
+a {
+  @apply text-vib-cyan underline-offset-4 hover:text-vib-purple;
+}

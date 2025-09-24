@@ -1,0 +1,11 @@
+# VIB34D Design System - Git Ignore Manifest
+# A Paul Phillips Manifestation - Paul@clearseassolutions.com
+# "The Revolution Will Not be in a Structured Format"
+# © 2025 Paul Phillips - Clear Seas Solutions LLC
+
+node_modules/
+.next/
+out/
+tsconfig.tsbuildinfo
+.DS_Store
+
