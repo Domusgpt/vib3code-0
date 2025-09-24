@@ -1,0 +1,70 @@
+{
+  "responsive": {
+    "name": "Responsive",
+    "category": "interactions",
+    "parameters": {
+      "hoverEffect": "lift_glow",
+      "clickEffect": "ripple_expand",
+      "scrollEffect": "parallax_smooth",
+      "sensitivity": 0.7,
+      "feedback": "visual"
+    },
+    "metadata": {
+      "description": "Responsive interactions with smooth feedback",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["responsive", "smooth", "feedback"]
+    }
+  },
+  "subtle": {
+    "name": "Subtle",
+    "category": "interactions",
+    "parameters": {
+      "hoverEffect": "opacity_shift",
+      "clickEffect": "scale_tap",
+      "scrollEffect": "content_shift",
+      "sensitivity": 0.4,
+      "feedback": "visual"
+    },
+    "metadata": {
+      "description": "Minimal, subtle interactions for professional environments",
+      "performance": "low",
+      "complexity": "simple",
+      "tags": ["subtle", "professional", "minimal"]
+    }
+  },
+  "dynamic": {
+    "name": "Dynamic",
+    "category": "interactions",
+    "parameters": {
+      "hoverEffect": "particle_burst",
+      "clickEffect": "energy_wave",
+      "scrollEffect": "reality_warp",
+      "sensitivity": 0.9,
+      "feedback": "visual"
+    },
+    "metadata": {
+      "description": "High-energy interactions with dramatic effects",
+      "performance": "high",
+      "complexity": "advanced",
+      "tags": ["dynamic", "energy", "dramatic"]
+    }
+  },
+  "tactile": {
+    "name": "Tactile",
+    "category": "interactions",
+    "parameters": {
+      "hoverEffect": "surface_deform",
+      "clickEffect": "depth_press",
+      "scrollEffect": "momentum_drag",
+      "sensitivity": 0.6,
+      "feedback": "haptic"
+    },
+    "metadata": {
+      "description": "Physical-feeling interactions with haptic feedback",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["tactile", "physical", "haptic"]
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "slide_portal": {
+    "name": "Slide Portal",
+    "category": "transitions",
+    "parameters": {
+      "pageTransition": "dimensional_slide",
+      "cardTransition": "portal_expand",
+      "duration": 800,
+      "easing": "cubic-bezier(0.4, 0.0, 0.2, 1)",
+      "stagger": 100
+    },
+    "metadata": {
+      "description": "Smooth dimensional sliding with portal effects",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["slide", "portal", "dimensional"]
+    }
+  },
+  "fade_harmony": {
+    "name": "Fade Harmony",
+    "category": "transitions",
+    "parameters": {
+      "pageTransition": "cross_fade",
+      "cardTransition": "harmonious_fade",
+      "duration": 600,
+      "easing": "ease-out",
+      "stagger": 50
+    },
+    "metadata": {
+      "description": "Gentle fading transitions with harmonic timing",
+      "performance": "low",
+      "complexity": "simple",
+      "tags": ["fade", "gentle", "harmonic"]
+    }
+  },
+  "glitch_burst": {
+    "name": "Glitch Burst",
+    "category": "transitions",
+    "parameters": {
+      "pageTransition": "reality_glitch",
+      "cardTransition": "data_burst",
+      "duration": 400,
+      "easing": "steps(8, end)",
+      "stagger": 25
+    },
+    "metadata": {
+      "description": "Digital glitch effects with burst patterns",
+      "performance": "high",
+      "complexity": "advanced",
+      "tags": ["glitch", "digital", "burst"]
+    }
+  },
+  "organic_flow": {
+    "name": "Organic Flow",
+    "category": "transitions",
+    "parameters": {
+      "pageTransition": "liquid_morph",
+      "cardTransition": "organic_grow",
+      "duration": 1000,
+      "easing": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+      "stagger": 150
+    },
+    "metadata": {
+      "description": "Natural, organic flowing transitions",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["organic", "natural", "flow"]
+    }
+  }
+}

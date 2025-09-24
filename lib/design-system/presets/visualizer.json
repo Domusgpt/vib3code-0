@@ -1,0 +1,74 @@
+{
+  "standard": {
+    "name": "Standard",
+    "category": "visualizer",
+    "parameters": {
+      "density": 0.5,
+      "speed": 1.0,
+      "reactivity": 0.6,
+      "colorScheme": "cyan-purple",
+      "particleCount": 1000,
+      "noiseIntensity": 0.3
+    },
+    "metadata": {
+      "description": "Balanced visualization for general use",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["default", "balanced", "general"]
+    }
+  },
+  "minimal": {
+    "name": "Minimal",
+    "category": "visualizer",
+    "parameters": {
+      "density": 0.2,
+      "speed": 0.8,
+      "reactivity": 0.3,
+      "colorScheme": "monochrome",
+      "particleCount": 500,
+      "noiseIntensity": 0.1
+    },
+    "metadata": {
+      "description": "Clean, minimal visualization for focus",
+      "performance": "low",
+      "complexity": "simple",
+      "tags": ["minimal", "clean", "performance"]
+    }
+  },
+  "intense": {
+    "name": "Intense",
+    "category": "visualizer",
+    "parameters": {
+      "density": 0.9,
+      "speed": 1.5,
+      "reactivity": 0.9,
+      "colorScheme": "rainbow",
+      "particleCount": 2500,
+      "noiseIntensity": 0.7
+    },
+    "metadata": {
+      "description": "High-energy visualization for impact",
+      "performance": "high",
+      "complexity": "advanced",
+      "tags": ["intense", "energy", "showcase"]
+    }
+  },
+  "ethereal": {
+    "name": "Ethereal",
+    "category": "visualizer",
+    "parameters": {
+      "density": 0.4,
+      "speed": 0.6,
+      "reactivity": 0.4,
+      "colorScheme": "pastel",
+      "particleCount": 800,
+      "noiseIntensity": 0.2
+    },
+    "metadata": {
+      "description": "Soft, flowing visualization for calm environments",
+      "performance": "medium",
+      "complexity": "moderate",
+      "tags": ["ethereal", "calm", "flowing"]
+    }
+  }
+}
