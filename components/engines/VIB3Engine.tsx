@@ -46,7 +46,7 @@ export function VIB3Engine({
       fallbackGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       return fallbackGeometry;
     }
-  }, [params]);
+  }, [params, sectionId, layerType]);
 
   // Update material properties when parameters change
   useEffect(() => {
