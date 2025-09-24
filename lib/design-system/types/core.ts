@@ -79,16 +79,23 @@ export interface PresetMetadata {
 
 // Coordinator Types
 export interface InteractionCoordinator {
+  applyPreset(preset: PresetDefinition | null): void;
   registerHoverHandler(element: HTMLElement, config: HoverConfig): void;
   registerClickHandler(element: HTMLElement, config: ClickConfig): void;
   registerScrollHandler(element: HTMLElement, config: ScrollConfig): void;
+  subscribeActiveInteractions(listener: (count: number) => void): () => void;
+  getActiveInteractions(): number;
   cleanup(): void;
 }
 
 export interface TransitionCoordinator {
+  applyPreset(preset: PresetDefinition | null): void;
   executeTransition(from: string, to: string, config: TransitionConfig): Promise<void>;
   registerTransition(name: string, config: TransitionConfig): void;
   getCurrentTransition(): string | null;
+  getActiveTransitions(): string[];
+  subscribeActiveTransitions(listener: (active: string[]) => void): () => void;
+  cleanup(): void;
 }
 
 export interface HoverConfig {
