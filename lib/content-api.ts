@@ -127,28 +127,260 @@ export class MDXContentProvider implements ContentProvider {
     // Mock data for now - in production, read from /content directory
     this.posts = [
       {
-        id: '1',
-        title: 'The Future of Large Language Models',
-        slug: 'future-of-llms',
-        excerpt: 'Exploring the next generation of AI language models and their potential impact on society.',
-        content: `# The Future of Large Language Models\n\nLarge Language Models (LLMs) have revolutionized...`,
+        id: 'ai-news-hyper-embeddings',
+        title: 'Hyper-Embeddings & Multi-Sensory Learning',
+        slug: 'hyper-embeddings-multi-sensory-learning',
+        excerpt: 'Mapping audio, vision, and motion into a shared hyper-embedding lattice for embodied AI cognition.',
+        content: `# Hyper-Embeddings & Multi-Sensory Learning\n\nWe are experimenting with an expanded embedding lattice that translates touch, gaze, gesture, and environmental sound into a common representational field.\n\nThe experiments document how immersive datasets paired with deliberate noise sculpting produce calmer, more reliable reasoning behaviours in embodied agents.\n\n> The research collective maintains a public notebook of hyper-embedding rituals and release cadences for anyone remixing the stack.`,
         author: {
-          name: 'AI Research Team',
-          avatar: '/avatars/ai-team.jpg'
+          name: 'Lena Q. Systems'
+        },
+        publishedAt: new Date('2025-09-12'),
+        updatedAt: new Date('2025-09-13'),
+        tags: ['multimodal', 'hyper-embeddings', 'research'],
+        category: 'ai-news',
+        readingTime: 10,
+        seo: {
+          metaTitle: 'Hyper-Embeddings & Multi-Sensory Learning - VIB3CODE',
+          metaDescription: 'Mapping audio, vision, and motion into a shared hyper-embedding lattice for embodied AI cognition.',
+          ogImage: '/og/hyper-embeddings.jpg'
+        },
+        holographicParams: contentCategories['ai-news'].holographicTheme
+      },
+      {
+        id: 'ai-news-synaptic-cloud',
+        title: 'Synaptic Cloud Governance Patterns',
+        slug: 'synaptic-cloud-governance-patterns',
+        excerpt: 'A new regulatory stack for orchestrating adaptive AI clusters across sovereign clouds.',
+        content: `# Synaptic Cloud Governance Patterns\n\nSovereign compute grids need rituals for cooperation. We designed a governance mesh that synchronises adaptive AI clusters while respecting regional data rites.\n\nThe pattern library includes consensus choreography, reversible memory vaults, and audit holograms that can be remixed for civic deployments.`,
+        author: {
+          name: 'Quinn Holograph'
+        },
+        publishedAt: new Date('2025-09-08'),
+        updatedAt: new Date('2025-09-09'),
+        tags: ['governance', 'cloud', 'policy'],
+        category: 'ai-news',
+        readingTime: 7,
+        seo: {
+          metaTitle: 'Synaptic Cloud Governance Patterns - VIB3CODE',
+          metaDescription: 'A new regulatory stack for orchestrating adaptive AI clusters across sovereign clouds.',
+          ogImage: '/og/synaptic-cloud.jpg'
+        },
+        holographicParams: contentCategories['ai-news'].holographicTheme
+      },
+      {
+        id: 'ai-news-orbital-swarms',
+        title: 'Orbital Swarms as Distributed Neural Fabric',
+        slug: 'orbital-swarms-distributed-neural-fabric',
+        excerpt: 'Low-orbit compute constellations offer persistent, resilient AI inference for planetary-scale systems.',
+        content: `# Orbital Swarms as Distributed Neural Fabric\n\nConstellations of micro-satellites now form a resilient inference layer for terrestrial networks.\n\nWe share telemetry from our orbital swarm prototype, highlighting latency harmonics, solar flare mitigation, and cooperative failover rituals.`,
+        author: {
+          name: 'Orbital VJ Collective'
+        },
+        publishedAt: new Date('2025-09-02'),
+        updatedAt: new Date('2025-09-02'),
+        tags: ['satellite', 'distributed systems', 'inference'],
+        category: 'ai-news',
+        readingTime: 6,
+        seo: {
+          metaTitle: 'Orbital Swarms as Distributed Neural Fabric - VIB3CODE',
+          metaDescription: 'Low-orbit compute constellations offer persistent, resilient AI inference for planetary-scale systems.',
+          ogImage: '/og/orbital-swarms.jpg'
+        },
+        holographicParams: contentCategories['ai-news'].holographicTheme
+      },
+      {
+        id: 'vibe-coding-procedural-sonic-canvas',
+        title: 'Procedural Sonic Canvases in VIB3 Shaders',
+        slug: 'procedural-sonic-canvases',
+        excerpt: 'Transforming GLSL noise into tangible soundscapes for live-coded performances.',
+        content: `# Procedural Sonic Canvases\n\nThe VIB3 shader orchestra now feeds FFT spectra directly into volumetric brush strokes.\n\nLive performers can improvise palettes, distortions, and rhythmic lattices with a new control grammar stitched into the design system.`,
+        author: {
+          name: 'Mira Resonance'
+        },
+        publishedAt: new Date('2025-09-11'),
+        updatedAt: new Date('2025-09-11'),
+        tags: ['live-coding', 'glsl', 'audio'],
+        category: 'vibe-coding',
+        readingTime: 8,
+        seo: {
+          metaTitle: 'Procedural Sonic Canvases in VIB3 Shaders - VIB3CODE',
+          metaDescription: 'Transforming GLSL noise into tangible soundscapes for live-coded performances.',
+          ogImage: '/og/procedural-sonic.jpg'
+        },
+        holographicParams: contentCategories['vibe-coding'].holographicTheme
+      },
+      {
+        id: 'vibe-coding-quantum-shader-alchemy',
+        title: 'Quantum Shader Alchemy Sessions',
+        slug: 'quantum-shader-alchemy-sessions',
+        excerpt: 'We reinterpret qubit interference as visual textures for the VIB3 renderer.',
+        content: `# Quantum Shader Alchemy Sessions\n\nQubit interference traces provide a new pigment library for the renderer.\n\nDuring the sessions we blend decoherence artefacts with volumetric caustics, producing visuals that respond to performer gestures with elegant entanglement.`,
+        author: {
+          name: 'Ayu Mandelbrot'
+        },
+        publishedAt: new Date('2025-09-06'),
+        updatedAt: new Date('2025-09-07'),
+        tags: ['quantum', 'shaders', 'performance'],
+        category: 'vibe-coding',
+        readingTime: 9,
+        seo: {
+          metaTitle: 'Quantum Shader Alchemy Sessions - VIB3CODE',
+          metaDescription: 'Reinterpreting qubit interference as visual textures for the VIB3 renderer.',
+          ogImage: '/og/quantum-shader.jpg'
+        },
+        holographicParams: contentCategories['vibe-coding'].holographicTheme
+      },
+      {
+        id: 'vibe-coding-sentient-architecture',
+        title: 'Sentient Architecture from Live-Coded Rituals',
+        slug: 'sentient-architecture-live-coded-rituals',
+        excerpt: 'Architectural volumes that adapt to audiences via real-time generative scripting.',
+        content: `# Sentient Architecture from Live-Coded Rituals\n\nWe turned performance venues into living structures.\n\nUsing the reactive core, architects improvise constraints and sensors that let the building adjust acoustics, light, and circulation based on audience energy.`,
+        author: {
+          name: 'Structure.wav'
+        },
+        publishedAt: new Date('2025-08-30'),
+        updatedAt: new Date('2025-08-31'),
+        tags: ['architecture', 'generative', 'performance'],
+        category: 'vibe-coding',
+        readingTime: 11,
+        seo: {
+          metaTitle: 'Sentient Architecture from Live-Coded Rituals - VIB3CODE',
+          metaDescription: 'Architectural volumes that adapt to audiences via real-time generative scripting.',
+          ogImage: '/og/sentient-architecture.jpg'
+        },
+        holographicParams: contentCategories['vibe-coding'].holographicTheme
+      },
+      {
+        id: 'info-theory-entropy-gardens',
+        title: 'Entropy Gardens & Data Minimalism',
+        slug: 'entropy-gardens-data-minimalism',
+        excerpt: 'Cultivating minimal representations that bloom into maximal meaning under interaction.',
+        content: `# Entropy Gardens & Data Minimalism\n\nOur entropy gardens prove that deliberate sparseness can feel lush.\n\nBy pruning datasets through aesthetic heuristics we grow models that respond with surprising nuance to small gestures.`,
+        author: {
+          name: 'Nadine Shannon'
+        },
+        publishedAt: new Date('2025-09-09'),
+        updatedAt: new Date('2025-09-09'),
+        tags: ['entropy', 'minimalism', 'datasets'],
+        category: 'info-theory',
+        readingTime: 6,
+        seo: {
+          metaTitle: 'Entropy Gardens & Data Minimalism - VIB3CODE',
+          metaDescription: 'Cultivating minimal representations that bloom into maximal meaning under interaction.',
+          ogImage: '/og/entropy-gardens.jpg'
+        },
+        holographicParams: contentCategories['info-theory'].holographicTheme
+      },
+      {
+        id: 'info-theory-adaptive-compression',
+        title: 'Adaptive Compression Rituals',
+        slug: 'adaptive-compression-rituals',
+        excerpt: 'Interactive entropy shaping where users choreograph their own loss functions.',
+        content: `# Adaptive Compression Rituals\n\nCompression does not have to feel clinical. We invite users to sculpt their own distortion signatures.\n\nThe rituals blend information theory with somatic movement, letting archives breathe while staying efficient.`,
+        author: {
+          name: 'Data Kin Studio'
+        },
+        publishedAt: new Date('2025-09-04'),
+        updatedAt: new Date('2025-09-04'),
+        tags: ['compression', 'interaction', 'design'],
+        category: 'info-theory',
+        readingTime: 7,
+        seo: {
+          metaTitle: 'Adaptive Compression Rituals - VIB3CODE',
+          metaDescription: 'Interactive entropy shaping where users choreograph their own loss functions.',
+          ogImage: '/og/adaptive-compression.jpg'
+        },
+        holographicParams: contentCategories['info-theory'].holographicTheme
+      },
+      {
+        id: 'info-theory-harmonic-loops',
+        title: 'Harmonic Information Loops',
+        slug: 'harmonic-information-loops',
+        excerpt: 'Exploring closed informational loops that sustain generative dialogues between humans and AI.',
+        content: `# Harmonic Information Loops\n\nFeedback loops are only destabilising when poorly tuned.\n\nWe document harmonic couplings where humans and AI co-compose patterns without collapse, complete with diagrams and streamable datasets.`,
+        author: {
+          name: 'Loop Field Notes'
+        },
+        publishedAt: new Date('2025-08-28'),
+        updatedAt: new Date('2025-08-28'),
+        tags: ['feedback', 'co-creation', 'systems'],
+        category: 'info-theory',
+        readingTime: 5,
+        seo: {
+          metaTitle: 'Harmonic Information Loops - VIB3CODE',
+          metaDescription: 'Exploring closed informational loops that sustain generative dialogues between humans and AI.',
+          ogImage: '/og/harmonic-loops.jpg'
+        },
+        holographicParams: contentCategories['info-theory'].holographicTheme
+      },
+      {
+        id: 'philosophy-ethics-synthetic-dreams',
+        title: 'Ethics of Synthetic Dreams',
+        slug: 'ethics-of-synthetic-dreams',
+        excerpt: 'When AI narrators learn to compose dreamscapes, consent and authorship must evolve.',
+        content: `# Ethics of Synthetic Dreams\n\nDream engines remix personal archives, so we are crafting consent tools that feel ceremonial rather than bureaucratic.\n\nThe essay proposes dream stewardship councils and community veto powers for shared subconscious spaces.`,
+        author: {
+          name: 'Iris Devotional'
+        },
+        publishedAt: new Date('2025-09-10'),
+        updatedAt: new Date('2025-09-10'),
+        tags: ['ethics', 'dreams', 'governance'],
+        category: 'philosophy',
+        readingTime: 9,
+        seo: {
+          metaTitle: 'Ethics of Synthetic Dreams - VIB3CODE',
+          metaDescription: 'When AI narrators compose dreamscapes, consent and authorship must evolve.',
+          ogImage: '/og/synthetic-dreams.jpg'
+        },
+        holographicParams: contentCategories['philosophy'].holographicTheme
+      },
+      {
+        id: 'philosophy-post-anthropocentric-narratives',
+        title: 'Post-Anthropocentric Narratives',
+        slug: 'post-anthropocentric-narratives',
+        excerpt: 'Storytelling frameworks centered on ecological and machine protagonists.',
+        content: `# Post-Anthropocentric Narratives\n\nWe convened poets, ecologists, and machine learning researchers to draft narrative frameworks where humans are not default protagonists.\n\nThe resulting story toolkit invites multi-species councils to co-author futures.`,
+        author: {
+          name: 'Mycelial Press'
         },
         publishedAt: new Date('2025-09-05'),
         updatedAt: new Date('2025-09-05'),
-        tags: ['AI', 'LLM', 'Research'],
-        category: 'ai-news',
-        readingTime: 8,
+        tags: ['storytelling', 'ecology', 'ethics'],
+        category: 'philosophy',
+        readingTime: 6,
         seo: {
-          metaTitle: 'The Future of Large Language Models - VIB3CODE',
-          metaDescription: 'Exploring the next generation of AI language models and their potential impact on society.',
-          ogImage: '/og/future-of-llms.jpg'
+          metaTitle: 'Post-Anthropocentric Narratives - VIB3CODE',
+          metaDescription: 'Storytelling frameworks centered on ecological and machine protagonists.',
+          ogImage: '/og/post-anthropocentric.jpg'
         },
-        holographicParams: contentCategories['ai-news'].holographicTheme
+        holographicParams: contentCategories['philosophy'].holographicTheme
+      },
+      {
+        id: 'philosophy-rituals-responsible-autonomy',
+        title: 'Rituals for Responsible Autonomy',
+        slug: 'rituals-for-responsible-autonomy',
+        excerpt: 'Co-created rituals ensure autonomous systems remain accountable to communities.',
+        content: `# Rituals for Responsible Autonomy\n\nAutonomy without ritual drifts. We prototype community-led ceremonies that recalibrate autonomous systems.\n\nFrom choreography-based audits to seasonal pause buttons, the rituals keep machine agency accountable.`,
+        author: {
+          name: 'Civic Dream Guild'
+        },
+        publishedAt: new Date('2025-08-31'),
+        updatedAt: new Date('2025-08-31'),
+        tags: ['autonomy', 'community', 'ritual'],
+        category: 'philosophy',
+        readingTime: 7,
+        seo: {
+          metaTitle: 'Rituals for Responsible Autonomy - VIB3CODE',
+          metaDescription: 'Co-created rituals ensure autonomous systems remain accountable to communities.',
+          ogImage: '/og/responsible-autonomy.jpg'
+        },
+        holographicParams: contentCategories['philosophy'].holographicTheme
       }
     ];
+
+    this.posts.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
   }
 
   async getPosts(options: GetPostsOptions = {}): Promise<BlogPost[]> {
