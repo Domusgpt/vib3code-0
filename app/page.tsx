@@ -14,10 +14,6 @@ import {
 } from '@/lib/store';
 import type { VIB3GeometryParams } from '@/lib/vib34d-geometries';
 
-const ParameterPanel = dynamic(() => import('@/components/ui/ParameterPanel'), {
-  ssr: false,
-  loading: () => null,
-});
 
 const VIB3Engine = dynamic(() => import('@/components/engines/VIB3Engine'), {
   ssr: false,
@@ -213,7 +209,7 @@ function AvantGardeBackground({
           className="w-full h-full"
           camera={{ position: [0, 0, 6], fov: 45 }}
         >
-          <color attach="background" args={['#040510']} />
+          <color attach="background" args={['#0a0f1a']} />
           <Suspense fallback={null}>
             <VIB3Engine
               sectionId={activeSection}
@@ -341,22 +337,6 @@ function HeroSection({
             {section.narrative}
           </p>
 
-          <div className="flex flex-wrap gap-6">
-            {[
-              { label: 'Hue', value: `${Math.round(params.hue * 360)}°` },
-              { label: 'Density', value: `${Math.round(params.density * 100)}%` },
-              { label: 'Morph', value: params.morph.toFixed(2) },
-              { label: 'Chaos', value: `${Math.round(params.chaos * 100)}%` },
-            ].map((metric) => (
-              <div
-                key={metric.label}
-                className="px-5 py-3 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-sm font-mono text-cyan-200/80"
-              >
-                <span className="text-cyan-100/40 mr-3">{metric.label}</span>
-                {metric.value}
-              </div>
-            ))}
-          </div>
 
           <div className="flex items-center gap-6 pt-6">
             <button
@@ -494,12 +474,6 @@ function AvantSectionPanel({
   const params = useResolvedParams(section.id);
   const accentColor = section.theme?.primaryColor ?? '#22d3ee';
 
-  const metrics = [
-    { label: 'Hue', value: `${Math.round((params.hue % 1) * 360)}°` },
-    { label: 'Density', value: `${Math.round(params.density * 100)}%` },
-    { label: 'Morph', value: params.morph.toFixed(2) },
-    { label: 'Chaos', value: `${Math.round(params.chaos * 100)}%` },
-  ];
 
   const transitions = SECTION_CONFIGS[section.id];
 
@@ -547,19 +521,6 @@ function AvantSectionPanel({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl px-6 py-5 text-sm text-cyan-100/70"
-              >
-                <div className="text-[10px] uppercase tracking-[0.4em] text-cyan-100/40 mb-2">
-                  {metric.label}
-                </div>
-                <div className="text-xl font-semibold text-white">{metric.value}</div>
-              </div>
-            ))}
-          </div>
 
           <div className="grid grid-cols-2 gap-4 text-xs text-cyan-100/60">
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
@@ -801,7 +762,7 @@ export default function AvantGardeBlogPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
         <div className="holographic-spinner">
           <div className="spinner-ring" />
           <div className="spinner-text">Calibrating holographic blog...</div>
@@ -811,7 +772,7 @@ export default function AvantGardeBlogPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+    <div className="relative min-h-screen bg-slate-900 text-white overflow-hidden">
       <AvantGardeBackground activeSection={currentSection} sections={sections} />
       <SectionNavigation sections={sections} currentSection={currentSection} />
 
@@ -833,9 +794,6 @@ export default function AvantGardeBlogPage() {
 
       <SectionTelemetry currentSection={currentSection} />
 
-      <Suspense fallback={null}>
-        <ParameterPanel />
-      </Suspense>
     </div>
   );
 }
