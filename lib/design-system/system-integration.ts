@@ -396,7 +396,7 @@ export class VIB34DSystem {
     // Wrap key methods with debug logging
     const originalProcessInteraction = this.components.interactionCoordinator.processInteraction.bind(this.components.interactionCoordinator);
     this.components.interactionCoordinator.processInteraction = (
-      type: string,
+      type: 'hover' | 'click' | 'focus' | 'scroll',
       sectionId: string,
       details: any,
       states: Record<string, SectionVisualState>
