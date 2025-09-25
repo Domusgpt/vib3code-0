@@ -821,9 +821,10 @@ export class InteractionCoordinator {
       sparkleEffects: result.sparkleEffects,
       realityInversion: result.realityInversion || {
         isActive: true,
-        intensity,
+        startedAt: Date.now(),
         duration: 2000,
-        startTime: Date.now(),
+        originalState: this.currentStates,
+        sparkleCount: Object.keys(this.currentStates).length * 8,
       },
     };
   }
