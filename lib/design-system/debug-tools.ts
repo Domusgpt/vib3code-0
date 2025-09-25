@@ -373,13 +373,23 @@ export class DebugTools {
   }
 
   /**
-   * Setup performance tracking
+   * Setup performance tracking - LIMITED TO PREVENT INFINITE LOOPS
    */
   private setupPerformanceTracking(): void {
     if (typeof window === 'undefined' || !window.requestAnimationFrame) return;
 
+    let frameCount = 0;
+    const maxFrames = 300; // Only track for 5 seconds at 60fps, then stop
+
     const trackFrame = () => {
       const now = performance.now();
+
+      // CRITICAL: Stop after limited frames to prevent infinite loop
+      if (frameCount >= maxFrames || !this.isEnabled) {
+        console.log('[VIB34D Debug] Performance tracking stopped after', frameCount, 'frames');
+        return;
+      }
+
       if (this.lastFrameTime > 0) {
         const frameDelta = now - this.lastFrameTime;
         const frameRate = 1000 / frameDelta;
@@ -389,19 +399,25 @@ export class DebugTools {
           this.frameRates.shift();
         }
 
-        // Detect frame drops
-        if (frameRate < 45 && this.isEnabled) {
-          this.logPerformanceIssue('Frame drop detected', { frameRate, frameDelta });
+        // Detect frame drops (but don't spam)
+        if (frameRate < 30 && frameCount % 60 === 0) {
+          this.logPerformanceIssue('Severe frame drop detected', { frameRate, frameDelta });
         }
       }
-      this.lastFrameTime = now;
 
-      if (this.isEnabled) {
+      this.lastFrameTime = now;
+      frameCount++;
+
+      // Continue only if enabled and under limit
+      if (this.isEnabled && frameCount < maxFrames) {
         requestAnimationFrame(trackFrame);
       }
     };
 
-    requestAnimationFrame(trackFrame);
+    // Only start tracking if explicitly enabled
+    if (this.isEnabled) {
+      requestAnimationFrame(trackFrame);
+    }
 
     // Setup Performance Observer if available
     if ('PerformanceObserver' in window) {

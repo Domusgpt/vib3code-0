@@ -60,7 +60,7 @@ export class VIB34DSystem {
   constructor(config: Partial<SystemConfiguration> = {}) {
     this.config = {
       enableDebugMode: false,
-      enablePerformanceMonitoring: true,
+      enablePerformanceMonitoring: false, // DISABLED BY DEFAULT to prevent lag
       validateConfiguration: true,
       syncConfiguration: {
         batchSize: 10,
@@ -307,6 +307,30 @@ export class VIB34DSystem {
   }
 
   /**
+   * EMERGENCY STOP - Immediately halt all performance-heavy operations
+   */
+  emergencyStop(): void {
+    console.warn('[VIB34D EMERGENCY STOP] Halting all operations to prevent system lag');
+
+    try {
+      // Immediately stop all animation loops
+      this.components.interpolator.stopAllInterpolations();
+      this.components.interpolator.destroy();
+
+      // Disable all performance monitoring
+      this.components.syncCoordinator.setPerformanceMonitoring(false);
+      this.components.debugTools.disable();
+
+      // Clear all pending operations
+      this.components.syncCoordinator.clearPendingPatches();
+
+      console.log('[VIB34D EMERGENCY STOP] All operations halted successfully');
+    } catch (error) {
+      console.error('[VIB34D EMERGENCY STOP] Error during emergency stop:', error);
+    }
+  }
+
+  /**
    * Graceful shutdown
    */
   destroy(): void {
@@ -507,6 +531,31 @@ export const createVIB34DSystem = (config?: Partial<SystemConfiguration>): VIB34
   return new VIB34DSystem(config);
 };
 
+// Global emergency stop function - can be called from browser console
+let globalVIB34DSystem: VIB34DSystem | null = null;
+
+export const setGlobalVIB34DSystem = (system: VIB34DSystem): void => {
+  globalVIB34DSystem = system;
+
+  // Make emergency stop available globally
+  if (typeof window !== 'undefined') {
+    (window as any).VIB34D_EMERGENCY_STOP = () => {
+      console.warn('🚨 VIB34D EMERGENCY STOP called from browser console');
+      system.emergencyStop();
+    };
+
+    console.log('🚨 Emergency stop available: VIB34D_EMERGENCY_STOP()');
+  }
+};
+
+export const globalEmergencyStop = (): void => {
+  if (globalVIB34DSystem) {
+    globalVIB34DSystem.emergencyStop();
+  } else {
+    console.warn('No global VIB34D system found');
+  }
+};
+
 /**
  * Utility functions for system integration
  */
@@ -528,7 +577,7 @@ export const SystemUtils = {
   createProductionSystem(): VIB34DSystem {
     return new VIB34DSystem({
       enableDebugMode: false,
-      enablePerformanceMonitoring: true,
+      enablePerformanceMonitoring: false, // Disabled for performance
       validateConfiguration: false,
       syncConfiguration: {
         batchSize: 15, // Larger batches for efficiency
@@ -536,6 +585,24 @@ export const SystemUtils = {
         enableAudioSync: true,
         enableCSSSync: true,
         enableWebGLSync: true,
+      },
+    });
+  },
+
+  /**
+   * Create lightweight system for low-end devices
+   */
+  createLightweightSystem(): VIB34DSystem {
+    return new VIB34DSystem({
+      enableDebugMode: false,
+      enablePerformanceMonitoring: false,
+      validateConfiguration: false,
+      syncConfiguration: {
+        batchSize: 5, // Small batches
+        maxBatchDelay: 32, // Slower updates
+        enableAudioSync: false, // Disable heavy features
+        enableCSSSync: true,
+        enableWebGLSync: false, // Disable WebGL for performance
       },
     });
   },

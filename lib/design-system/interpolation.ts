@@ -290,12 +290,20 @@ export class ParameterInterpolator {
   }
 
   /**
-   * Animation loop for active interpolations
+   * Animation loop for active interpolations - PERFORMANCE OPTIMIZED
    */
   private startAnimationLoop(): void {
     const animate = () => {
       const now = performance.now();
       const completedIds: string[] = [];
+
+      // CRITICAL: Only run if there are active interpolations
+      if (this.activeInterpolations.size === 0) {
+        // No interpolations active, stop the loop to prevent infinite RAF calls
+        this.animationFrameId = undefined;
+        console.log('[VIB34D Interpolator] Animation loop stopped - no active interpolations');
+        return;
+      }
 
       this.activeInterpolations.forEach((interpolation, id) => {
         const elapsed = now - interpolation.startTime;
@@ -316,21 +324,40 @@ export class ParameterInterpolator {
           );
         }
 
-        interpolation.onUpdate(currentValue);
+        try {
+          interpolation.onUpdate(currentValue);
+        } catch (error) {
+          console.error('[VIB34D Interpolator] Update callback error:', error);
+          completedIds.push(id); // Remove problematic interpolation
+        }
 
         if (progress >= 1) {
           completedIds.push(id);
-          interpolation.onComplete();
+          try {
+            interpolation.onComplete();
+          } catch (error) {
+            console.error('[VIB34D Interpolator] Complete callback error:', error);
+          }
         }
       });
 
       // Remove completed interpolations
       completedIds.forEach(id => this.activeInterpolations.delete(id));
 
-      this.animationFrameId = requestAnimationFrame(animate);
+      // Only continue if there are still active interpolations
+      if (this.activeInterpolations.size > 0) {
+        this.animationFrameId = requestAnimationFrame(animate);
+      } else {
+        this.animationFrameId = undefined;
+        console.log('[VIB34D Interpolator] Animation loop ended - all interpolations complete');
+      }
     };
 
-    this.animationFrameId = requestAnimationFrame(animate);
+    // Only start if not already running
+    if (!this.animationFrameId) {
+      this.animationFrameId = requestAnimationFrame(animate);
+      console.log('[VIB34D Interpolator] Animation loop started');
+    }
   }
 
   /**
