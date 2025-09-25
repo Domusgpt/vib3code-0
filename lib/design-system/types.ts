@@ -203,6 +203,25 @@ export interface HoverInteractionResult {
   stagger: number;
 }
 
+export interface RealityInversionState {
+  isActive: boolean;
+  startedAt: number;
+  duration: number;
+  originalState: Record<string, SectionVisualState>;
+  sparkleCount: number;
+}
+
+export interface SparkleEffect {
+  sectionId: string;
+  count: number;
+  duration: number;
+}
+
+export interface EnhancedClickResult extends ClickInteractionResult {
+  realityInversion?: RealityInversionState;
+  sparkleEffects?: SparkleEffect[];
+}
+
 export interface ClickInteractionResult {
   sectionStates: Record<string, SectionVisualState>;
   paramPatches: Record<string, ParameterPatch>;
@@ -231,6 +250,42 @@ export interface DesignSystemAdvancedTuning {
   transitionDurationMultiplier: number;
 }
 
+export interface ParameterRelationship {
+  source: keyof SectionVisualState;
+  target: keyof SectionVisualState;
+  relationship: 'linear' | 'inverse' | 'exponential' | 'logarithmic';
+  intensity: number;
+  delay?: number;
+  curve?: (value: number) => number;
+}
+
+export interface ParameterWeb {
+  relationships: ParameterRelationship[];
+}
+
+export interface PresetEffect {
+  visual: Partial<SectionVisualState>;
+  parameters: ParameterPatch;
+  timing: {
+    duration: number;
+    easing: string;
+    stagger?: number;
+  };
+}
+
+export interface CoordinatedPreset {
+  name: string;
+  description: string;
+  effects: {
+    focused: PresetEffect;
+    unfocused: PresetEffect;
+    system: {
+      globalMultipliers: DesignSystemAdvancedTuning;
+      parameterWeb?: ParameterWeb;
+    };
+  };
+}
+
 export interface DesignSystemStateSlice {
   selections: DesignSystemSelections;
   advanced: DesignSystemAdvancedTuning;
@@ -243,6 +298,8 @@ export interface DesignSystemStateSlice {
   customPresets: Record<string, ParameterPatch>;
   reactivitySettings?: VisualizerReactivityPreset;
   colorPalette?: VisualizerColorPreset;
+  parameterWebs?: Record<string, ParameterWeb>;
+  coordinatedPresets?: Record<string, CoordinatedPreset>;
 }
 
 export interface EditorControlOption {

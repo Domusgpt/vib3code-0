@@ -3,18 +3,402 @@ import {
   ClickInteractionResult,
   ClickResponseDefinition,
   DesignSystemAdvancedTuning,
+  EnhancedClickResult,
   HoverEffectPreset,
   HoverInteractionResult,
   HoverResponseDefinition,
   ParameterPatch,
+  ParameterRelationship,
+  ParameterWeb,
+  RealityInversionState,
   ScrollEffectPreset,
   ScrollInteractionResult,
   SectionParameterSnapshot,
   SectionVisualState,
+  SparkleEffect,
   VisualStateMultipliers,
 } from './types';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+
+/**
+ * Parameter Web Engine - Type-safe parameter relationships
+ *
+ * Manages mathematical relationships between visual parameters across sections,
+ * enabling sophisticated cascade effects and coordinated animations.
+ *
+ * @example
+ * ```typescript
+ * const hoverWeb = ParameterWebEngine.createHoverWeb();
+ * const engine = new ParameterWebEngine(hoverWeb);
+ *
+ * const cascades = engine.calculateCascade(
+ *   'home',
+ *   'gridDensity',
+ *   1.2,
+ *   currentStates
+ * );
+ * ```
+ */
+export class ParameterWebEngine {
+  private web: ParameterWeb;
+
+  /**
+   * Creates a new Parameter Web Engine
+   * @param web - The parameter web configuration defining relationships
+   */
+  constructor(web: ParameterWeb) {
+    this.web = web;
+  }
+
+  /**
+   * Validates and sanitizes numerical input to prevent edge cases
+   * @param value - Input value to validate
+   * @returns Sanitized number within safe bounds
+   */
+  private validateInput(value: number): number {
+    if (!isFinite(value)) return 0;
+    return Math.max(-1000, Math.min(1000, value));
+  }
+
+  /**
+   * Validates a curve function by testing it with safe values
+   * @param curve - The curve function to validate
+   * @returns True if the curve function is safe to use
+   */
+  private validateCurve(curve: (x: number) => number): boolean {
+    try {
+      const testValues = [0, 0.5, 1.0, -0.5, -1.0];
+      for (const testValue of testValues) {
+        const result = curve(testValue);
+        if (!isFinite(result)) {
+          return false;
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private applyRelationship(
+    sourceValue: number,
+    relationship: ParameterRelationship
+  ): number {
+    const { relationship: type, intensity, curve } = relationship;
+
+    // Validate input to prevent edge cases
+    const safeSourceValue = this.validateInput(sourceValue);
+    const safeIntensity = this.validateInput(intensity);
+
+    if (curve) {
+      // Validate curve function first
+      if (!this.validateCurve(curve)) {
+        console.warn('Invalid curve function detected, falling back to linear relationship');
+        return safeSourceValue * safeIntensity;
+      }
+
+      try {
+        const curveResult = curve(safeSourceValue);
+        return this.validateInput(curveResult * safeIntensity);
+      } catch (error) {
+        console.warn('Curve function error, falling back to linear relationship:', error);
+        return safeSourceValue * safeIntensity;
+      }
+    }
+
+    let result: number;
+    switch (type) {
+      case 'linear':
+        result = safeSourceValue * safeIntensity;
+        break;
+      case 'inverse':
+        result = (1.0 - safeSourceValue) * safeIntensity;
+        break;
+      case 'exponential':
+        result = Math.pow(Math.abs(safeSourceValue), 2) * Math.sign(safeSourceValue) * safeIntensity;
+        break;
+      case 'logarithmic':
+        result = Math.log(Math.max(0.01, Math.abs(safeSourceValue))) * Math.sign(safeSourceValue) * safeIntensity * 0.5;
+        break;
+      default:
+        result = safeSourceValue * safeIntensity;
+    }
+
+    return this.validateInput(result);
+  }
+
+  /**
+   * Calculates cascade effects from a source parameter change
+   *
+   * @param sourceSection - The section ID that triggered the cascade
+   * @param sourceProperty - The visual property that changed
+   * @param newValue - The new value of the source property
+   * @param currentStates - Current state of all sections
+   * @returns Object mapping section IDs to their partial state updates
+   *
+   * @example
+   * ```typescript
+   * const cascades = engine.calculateCascade(
+   *   'hero',
+   *   'gridDensity',
+   *   1.5,
+   *   { hero: heroState, sidebar: sidebarState }
+   * );
+   * // Returns: { sidebar: { colorIntensity: 0.8, reactivity: 1.2 } }
+   * ```
+   */
+  calculateCascade(
+    sourceSection: string,
+    sourceProperty: keyof SectionVisualState,
+    newValue: number,
+    currentStates: Record<string, SectionVisualState>
+  ): Record<string, Partial<SectionVisualState>> {
+    const cascades: Record<string, Partial<SectionVisualState>> = {};
+
+    // Find relationships that affect this source property
+    this.web.relationships.forEach((relationship) => {
+      if (relationship.source === sourceProperty) {
+        // Apply this relationship to all other sections
+        Object.keys(currentStates).forEach((sectionId) => {
+          if (sectionId === sourceSection) return; // Don't cascade to self
+
+          const targetValue = this.applyRelationship(newValue, relationship);
+          const currentState = currentStates[sectionId];
+
+          if (!cascades[sectionId]) {
+            cascades[sectionId] = {};
+          }
+
+          // Apply the cascade with proper clamping based on target property
+          switch (relationship.target) {
+            case 'gridDensity':
+              cascades[sectionId].gridDensity = clamp(
+                currentState.gridDensity + targetValue,
+                0.1,
+                4
+              );
+              break;
+            case 'colorIntensity':
+              cascades[sectionId].colorIntensity = clamp(
+                currentState.colorIntensity + targetValue,
+                0.2,
+                4
+              );
+              break;
+            case 'reactivity':
+              cascades[sectionId].reactivity = clamp(
+                currentState.reactivity + targetValue,
+                0.2,
+                4
+              );
+              break;
+            case 'depth':
+              cascades[sectionId].depth = clamp(
+                currentState.depth + targetValue * 10, // Scale for depth
+                -50,
+                50
+              );
+              break;
+          }
+        });
+      }
+    });
+
+    return cascades;
+  }
+
+  /**
+   * Creates a parameter web optimized for hover interactions
+   * @returns A ParameterWeb configured with hover-optimized relationships
+   */
+  static createHoverWeb(): ParameterWeb {
+    return {
+      relationships: [
+        {
+          source: 'gridDensity',
+          target: 'colorIntensity',
+          relationship: 'linear',
+          intensity: 0.3,
+        },
+        {
+          source: 'colorIntensity',
+          target: 'gridDensity',
+          relationship: 'inverse',
+          intensity: 0.6,
+        },
+        {
+          source: 'depth',
+          target: 'reactivity',
+          relationship: 'exponential',
+          intensity: 0.2,
+        },
+      ],
+    };
+  }
+
+  /**
+   * Creates a parameter web optimized for click interactions
+   * @returns A ParameterWeb configured with click-optimized relationships
+   */
+  static createClickWeb(): ParameterWeb {
+    return {
+      relationships: [
+        {
+          source: 'gridDensity',
+          target: 'depth',
+          relationship: 'inverse',
+          intensity: 0.5,
+          delay: 100,
+        },
+        {
+          source: 'colorIntensity',
+          target: 'reactivity',
+          relationship: 'logarithmic',
+          intensity: 0.4,
+        },
+      ],
+    };
+  }
+}
+
+/**
+ * Reality Inversion System - React-friendly reality inversion effects
+ *
+ * Provides sophisticated reality inversion capabilities that flip visual parameters
+ * across all sections in a coordinated manner, with proper cleanup and React-compatible
+ * timing mechanisms.
+ *
+ * @example
+ * ```typescript
+ * const inversionEngine = new RealityInversionEngine();
+ * const result = inversionEngine.triggerRealityInversion(sectionStates, 1.5);
+ *
+ * // Result includes inverted states, parameter patches, and sparkle effects
+ * console.log(result.sparkleEffects.length); // Number of sparkle effects generated
+ * ```
+ */
+export class RealityInversionEngine {
+  private inversionState?: RealityInversionState;
+
+  /**
+   * Triggers a coordinated reality inversion across all sections
+   *
+   * @param sections - Current visual states of all sections
+   * @param intensity - Intensity multiplier for the inversion effect (default: 1.0)
+   * @returns Enhanced click result with inversion states, patches, and sparkle effects
+   *
+   * @example
+   * ```typescript
+   * const result = engine.triggerRealityInversion(
+   *   { home: homeState, about: aboutState },
+   *   1.2
+   * );
+   * ```
+   */
+  triggerRealityInversion(
+    sections: Record<string, SectionVisualState>,
+    intensity: number = 1.0
+  ): EnhancedClickResult {
+    // Store original states for restoration
+    const originalStates = { ...sections };
+
+    // Create inverted states
+    const invertedStates: Record<string, SectionVisualState> = {};
+    const paramPatches: Record<string, ParameterPatch> = {};
+
+    Object.entries(sections).forEach(([sectionId, state]) => {
+      invertedStates[sectionId] = {
+        ...state,
+        gridDensity: Math.max(0.1, (1 - state.gridDensity) * intensity),
+        colorIntensity: Math.max(0.2, (2 - state.colorIntensity) * intensity),
+        reactivity: Math.max(0.2, (1.5 - state.reactivity) * intensity),
+        depth: -state.depth * intensity,
+        inversionActiveUntil: Date.now() + (2000 * intensity),
+        lastUpdated: Date.now(),
+      };
+
+      // Generate inversion parameter patches
+      paramPatches[sectionId] = {
+        density: Math.max(0, 1 - (state.gridDensity * intensity)),
+        chaos: Math.min(1, 0.5 * intensity),
+        glitch: Math.min(1, 0.3 * intensity),
+        chromaShift: Math.max(-1, -0.5 * intensity),
+        timeScale: -Math.abs(1.0) * intensity,
+      };
+    });
+
+    // Create sparkle effects
+    const sparkleEffects: SparkleEffect[] = Object.keys(sections).map((sectionId) => ({
+      sectionId,
+      count: Math.floor(8 * intensity),
+      duration: 1500 * intensity,
+    }));
+
+    // Update internal inversion state
+    this.inversionState = {
+      isActive: true,
+      startedAt: Date.now(),
+      duration: 2000 * intensity,
+      originalState: originalStates,
+      sparkleCount: Math.floor(8 * intensity),
+    };
+
+    return {
+      sectionStates: invertedStates,
+      paramPatches,
+      realityInversion: this.inversionState,
+      sparkleEffects,
+    };
+  }
+
+  generateInversionPatches(invertedStates: Record<string, SectionVisualState>): Record<string, ParameterPatch> {
+    const patches: Record<string, ParameterPatch> = {};
+
+    Object.entries(invertedStates).forEach(([sectionId, state]) => {
+      patches[sectionId] = {
+        density: state.gridDensity,
+        morph: Math.max(0, 1 - state.colorIntensity),
+        chaos: state.reactivity * 0.3,
+        glitch: Math.min(1, state.depth * 0.01 + 0.2),
+        dispAmp: Math.abs(state.depth * 0.002),
+        chromaShift: state.colorIntensity - 1,
+        timeScale: state.reactivity,
+      };
+    });
+
+    return patches;
+  }
+
+  generateSparkleEffects(
+    sections: Record<string, SectionVisualState>,
+    intensity: number
+  ): SparkleEffect[] {
+    return Object.keys(sections).map((sectionId) => ({
+      sectionId,
+      count: Math.floor((8 + Math.random() * 8) * intensity),
+      duration: Math.floor((1500 + Math.random() * 500) * intensity),
+    }));
+  }
+
+  isInversionActive(): boolean {
+    if (!this.inversionState) return false;
+
+    const elapsed = Date.now() - this.inversionState.startedAt;
+    return elapsed < this.inversionState.duration;
+  }
+
+  getInversionProgress(): number {
+    if (!this.inversionState) return 0;
+
+    const elapsed = Date.now() - this.inversionState.startedAt;
+    return Math.min(1, elapsed / this.inversionState.duration);
+  }
+
+  clearInversion(): void {
+    this.inversionState = undefined;
+  }
+}
 
 const parseScalarOperation = (operation: string): number => {
   if (operation.startsWith('increase_')) {
@@ -97,6 +481,7 @@ interface HoverInteractionContext {
   effect: HoverEffectPreset;
   advanced: DesignSystemAdvancedTuning;
   timestamp: number;
+  parameterWeb?: ParameterWeb;
 }
 
 export const applyHoverInteraction = ({
@@ -107,11 +492,13 @@ export const applyHoverInteraction = ({
   effect,
   advanced,
   timestamp,
+  parameterWeb,
 }: HoverInteractionContext): HoverInteractionResult => {
   const nextStates: Record<string, SectionVisualState> = { ...sectionStates };
   const paramPatches: Record<string, ParameterPatch> = {};
   const sectionIds = Object.keys(params);
 
+  // Apply base hover effects first
   sectionIds.forEach((sectionId) => {
     const baseParams = params[sectionId];
     if (!baseParams) {
@@ -126,6 +513,43 @@ export const applyHoverInteraction = ({
     nextStates[sectionId] = updatedState;
     paramPatches[sectionId] = mapVisualStateToParams(updatedState, baseParams, advanced);
   });
+
+  // Apply parameter web cascades if available
+  if (parameterWeb) {
+    const webEngine = new ParameterWebEngine(parameterWeb);
+    const targetState = nextStates[targetId];
+
+    if (targetState) {
+      // Calculate cascades for each property that changed
+      const cascades = webEngine.calculateCascade(
+        targetId,
+        'gridDensity', // Primary cascade property for hover
+        targetState.gridDensity,
+        nextStates
+      );
+
+      // Apply cascades to affected sections
+      Object.entries(cascades).forEach(([sectionId, cascade]) => {
+        if (nextStates[sectionId]) {
+          nextStates[sectionId] = {
+            ...nextStates[sectionId],
+            ...cascade,
+            lastUpdated: timestamp,
+          };
+
+          // Update parameter patches with cascaded changes
+          const baseParams = params[sectionId];
+          if (baseParams) {
+            paramPatches[sectionId] = mapVisualStateToParams(
+              nextStates[sectionId],
+              baseParams,
+              advanced
+            );
+          }
+        }
+      });
+    }
+  }
 
   const baseDuration = parseDurationMs(hoverResponse.transition.duration);
   const duration = baseDuration * effect.transitionSpeedMultiplier * advanced.transitionDurationMultiplier;
@@ -148,6 +572,8 @@ interface ClickInteractionContext {
   effect: ClickEffectPreset;
   advanced: DesignSystemAdvancedTuning;
   timestamp: number;
+  enableRealityInversion?: boolean;
+  inversionIntensity?: number;
 }
 
 const invertValue = (value: number, min = 0, max = 1): number => clamp(max - (value - min), min, max);
@@ -160,7 +586,16 @@ export const applyClickInteraction = ({
   effect,
   advanced,
   timestamp,
-}: ClickInteractionContext): ClickInteractionResult => {
+  enableRealityInversion = false,
+  inversionIntensity = 1.0,
+}: ClickInteractionContext): ClickInteractionResult | EnhancedClickResult => {
+  // Check if reality inversion is requested
+  if (enableRealityInversion) {
+    const inversionEngine = new RealityInversionEngine();
+    return inversionEngine.triggerRealityInversion(sectionStates, inversionIntensity);
+  }
+
+  // Standard click interaction (original behavior)
   const nextStates: Record<string, SectionVisualState> = { ...sectionStates };
   const baseState = nextStates[targetId] ?? createDefaultSectionVisualState();
   const updatedState: SectionVisualState = {

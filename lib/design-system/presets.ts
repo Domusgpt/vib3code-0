@@ -1,9 +1,11 @@
 import {
   CardTransitionPreset,
+  CoordinatedPreset,
   DesignSystemAdvancedTuning,
   DesignSystemSelections,
   HoverEffectPreset,
   PageTransitionPreset,
+  ParameterWeb,
   ScrollEffectPreset,
   VisualizerColorPreset,
   VisualizerDensityPreset,
@@ -209,5 +211,259 @@ export const DEFAULT_ADVANCED_TUNING: DesignSystemAdvancedTuning = {
   speedMultiplier: 1.0,
   interactionSensitivity: 1.0,
   transitionDurationMultiplier: 1.0,
+};
+
+// Sophisticated Coordinated Presets - Multi-system coordination with mathematical relationships
+export const coordinatedPresets: Record<string, CoordinatedPreset> = {
+  dimensional_focus: {
+    name: 'dimensional_focus',
+    description: 'Multi-dimensional focus with parameter web cascade',
+    effects: {
+      focused: {
+        visual: {
+          gridDensity: 1.08,
+          colorIntensity: 1.0,
+          depth: 6,
+          reactivity: 1.15,
+        },
+        parameters: {
+          density: 1.08,
+          chaos: 0.0,
+          glitch: 0.0,
+          dispAmp: 0.15,
+          chromaShift: 0.02,
+        },
+        timing: { duration: 400, easing: 'ease-out' },
+      },
+      unfocused: {
+        visual: {
+          gridDensity: 0.96,
+          colorIntensity: 0.65,
+          depth: -3,
+          reactivity: 0.85,
+        },
+        parameters: {
+          density: 0.96,
+          chaos: 0.1,
+          glitch: 0.05,
+          dispAmp: 0.08,
+          chromaShift: -0.02,
+        },
+        timing: { duration: 400, easing: 'ease-out', stagger: 50 },
+      },
+      system: {
+        globalMultipliers: {
+          speedMultiplier: 0.95,
+          interactionSensitivity: 1.25,
+          transitionDurationMultiplier: 1.3,
+        },
+        parameterWeb: {
+          relationships: [
+            {
+              source: 'gridDensity',
+              target: 'colorIntensity',
+              relationship: 'linear',
+              intensity: 0.4,
+            },
+            {
+              source: 'depth',
+              target: 'reactivity',
+              relationship: 'exponential',
+              intensity: 0.3,
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  harmonic_resonance: {
+    name: 'harmonic_resonance',
+    description: 'Synchronized oscillation with harmonic mathematical relationships',
+    effects: {
+      focused: {
+        visual: {
+          gridDensity: 1.2,
+          colorIntensity: 1.3,
+          depth: 8,
+          reactivity: 1.4,
+        },
+        parameters: {
+          density: 1.2,
+          morph: 0.8,
+          noiseFreq: 2.5,
+          timeScale: 1.2,
+        },
+        timing: { duration: 600, easing: 'ease-in-out' },
+      },
+      unfocused: {
+        visual: {
+          gridDensity: 0.8,
+          colorIntensity: 0.7,
+          depth: -2,
+          reactivity: 0.6,
+        },
+        parameters: {
+          density: 0.8,
+          morph: 0.3,
+          noiseFreq: 1.8,
+          timeScale: 0.8,
+        },
+        timing: { duration: 600, easing: 'ease-in-out', stagger: 75 },
+      },
+      system: {
+        globalMultipliers: {
+          speedMultiplier: 1.1,
+          interactionSensitivity: 1.4,
+          transitionDurationMultiplier: 0.9,
+        },
+        parameterWeb: {
+          relationships: [
+            {
+              source: 'colorIntensity',
+              target: 'gridDensity',
+              relationship: 'inverse',
+              intensity: 0.6,
+              curve: (x: number) => Math.sin(x * Math.PI * 2) * 0.5 + 0.5,
+            },
+            {
+              source: 'reactivity',
+              target: 'depth',
+              relationship: 'logarithmic',
+              intensity: 0.5,
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  reality_distortion: {
+    name: 'reality_distortion',
+    description: 'Extreme parameter inversion with cascade stabilization',
+    effects: {
+      focused: {
+        visual: {
+          gridDensity: 1.5,
+          colorIntensity: 1.6,
+          depth: 15,
+          reactivity: 1.8,
+        },
+        parameters: {
+          density: 1.5,
+          chaos: 0.6,
+          glitch: 0.3,
+          dispAmp: 0.4,
+          chromaShift: 0.15,
+          timeScale: 1.5,
+        },
+        timing: { duration: 300, easing: 'ease-out-expo' },
+      },
+      unfocused: {
+        visual: {
+          gridDensity: 0.6,
+          colorIntensity: 0.4,
+          depth: -8,
+          reactivity: 0.5,
+        },
+        parameters: {
+          density: 0.6,
+          chaos: 0.2,
+          glitch: 0.1,
+          dispAmp: 0.1,
+          chromaShift: -0.1,
+          timeScale: 0.7,
+        },
+        timing: { duration: 500, easing: 'ease-out-back', stagger: 100 },
+      },
+      system: {
+        globalMultipliers: {
+          speedMultiplier: 1.3,
+          interactionSensitivity: 2.0,
+          transitionDurationMultiplier: 0.8,
+        },
+        parameterWeb: {
+          relationships: [
+            {
+              source: 'gridDensity',
+              target: 'depth',
+              relationship: 'inverse',
+              intensity: 0.8,
+            },
+            {
+              source: 'colorIntensity',
+              target: 'reactivity',
+              relationship: 'exponential',
+              intensity: 0.7,
+            },
+            {
+              source: 'depth',
+              target: 'gridDensity',
+              relationship: 'logarithmic',
+              intensity: 0.4,
+              delay: 200,
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  zen_equilibrium: {
+    name: 'zen_equilibrium',
+    description: 'Balanced harmony with subtle mathematical stabilization',
+    effects: {
+      focused: {
+        visual: {
+          gridDensity: 1.02,
+          colorIntensity: 1.05,
+          depth: 2,
+          reactivity: 1.03,
+        },
+        parameters: {
+          density: 1.02,
+          morph: 0.5,
+          chaos: 0.02,
+          noiseFreq: 2.0,
+          timeScale: 1.0,
+        },
+        timing: { duration: 800, easing: 'ease-in-out-sine' },
+      },
+      unfocused: {
+        visual: {
+          gridDensity: 0.98,
+          colorIntensity: 0.95,
+          depth: -1,
+          reactivity: 0.97,
+        },
+        parameters: {
+          density: 0.98,
+          morph: 0.5,
+          chaos: 0.01,
+          noiseFreq: 2.0,
+          timeScale: 1.0,
+        },
+        timing: { duration: 800, easing: 'ease-in-out-sine', stagger: 25 },
+      },
+      system: {
+        globalMultipliers: {
+          speedMultiplier: 0.9,
+          interactionSensitivity: 0.8,
+          transitionDurationMultiplier: 1.5,
+        },
+        parameterWeb: {
+          relationships: [
+            {
+              source: 'gridDensity',
+              target: 'colorIntensity',
+              relationship: 'linear',
+              intensity: 0.1,
+              curve: (x: number) => x * 0.95 + 0.05, // Gentle stabilization
+            },
+          ],
+        },
+      },
+    },
+  },
 };
 
