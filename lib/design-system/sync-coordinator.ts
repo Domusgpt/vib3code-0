@@ -275,7 +275,7 @@ export class SyncCoordinator {
         if (callback) {
           const optimized = this.optimizePatchBatch(patches);
           callback(optimized);
-          result[layer as keyof Omit<SyncResult, 'timestamp' | 'batchSize'>] = true;
+          (result as any)[layer] = true;
           result.batchSize += optimized.length;
 
           // Update sync state
@@ -386,7 +386,7 @@ export class SyncCoordinator {
 
     // Collect recent unique warnings
     const allWarnings = recent.flatMap(m => m.warnings);
-    const recentWarnings = [...new Set(allWarnings)].slice(-5);
+    const recentWarnings = Array.from(new Set(allWarnings)).slice(-5);
 
     return {
       averageExecutionTime,

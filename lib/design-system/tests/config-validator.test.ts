@@ -118,8 +118,8 @@ describe('ConfigValidator', () => {
       const result = validator.validateSystem(config);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('Preset \'invalid\' missing required property: id');
       expect(result.errors).toContain('Preset \'invalid\' missing required property: name');
+      expect(result.errors).toContain('Preset \'invalid\' missing required property: description');
     });
 
     test('warns about unknown parameters', () => {

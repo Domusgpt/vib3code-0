@@ -92,7 +92,7 @@ export class VIB34DSystem {
       // Enable debug mode if requested
       if (this.config.enableDebugMode) {
         this.components.debugTools.enable();
-        this.components.debugTools.logParameterChange('system', { status: 'initializing' }, 'system');
+        this.components.debugTools.logParameterChange('system', { status: 'initializing' } as any, 'system');
       }
 
       // Validate configuration
@@ -180,7 +180,7 @@ export class VIB34DSystem {
       // Update section states if modified
       if (result.sectionStates) {
         Object.entries(result.sectionStates).forEach(([id, state]) => {
-          this.sectionStates[id] = state;
+          this.sectionStates[id] = state as SectionVisualState;
         });
         this.components.agentInterface.updateStates(this.sectionStates);
       }
@@ -341,17 +341,16 @@ export class VIB34DSystem {
   }
 
   private async validateSystemConfiguration(): Promise<void> {
-    // Check browser support
-    const browserSupport = this.components.configValidator['checkBrowserSupport']
-      ? await this.components.configValidator['checkBrowserSupport']()
-      : { isValid: true, errors: [], warnings: [] };
+    // Check browser support - using imported function
+    const { checkBrowserSupport } = await import('./config-validator');
+    const browserSupport = checkBrowserSupport();
 
     if (!browserSupport.isValid) {
       throw new Error(`Browser compatibility issues: ${browserSupport.errors.join(', ')}`);
     }
 
     if (browserSupport.warnings.length > 0) {
-      browserSupport.warnings.forEach(warning => {
+      browserSupport.warnings.forEach((warning: string) => {
         this.log(warning, 'warning');
       });
     }
@@ -372,7 +371,12 @@ export class VIB34DSystem {
   private setupDebugLogging(): void {
     // Wrap key methods with debug logging
     const originalProcessInteraction = this.components.interactionCoordinator.processInteraction.bind(this.components.interactionCoordinator);
-    this.components.interactionCoordinator.processInteraction = (type, sectionId, details, states) => {
+    this.components.interactionCoordinator.processInteraction = (
+      type: string,
+      sectionId: string,
+      details: any,
+      states: Record<string, SectionVisualState>
+    ) => {
       this.components.debugTools.logInteraction(type, sectionId, details);
       return originalProcessInteraction(type, sectionId, details, states);
     };

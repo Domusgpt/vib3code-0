@@ -283,7 +283,7 @@ export class DebugTools {
       const changes: Partial<SectionVisualState> = {};
       (Object.keys(state2) as (keyof SectionVisualState)[]).forEach(key => {
         if (state1[key] !== state2[key]) {
-          changes[key] = state2[key];
+          (changes as any)[key] = state2[key];
         }
       });
 
@@ -620,7 +620,7 @@ export const createParameterInspector = (
 
       (Object.keys(state) as (keyof SectionVisualState)[]).forEach(key => {
         if (state[key] !== other[key]) {
-          changes[key] = other[key];
+          (changes as any)[key] = other[key];
         }
       });
 

@@ -747,3 +747,147 @@ export const pruneExpiredEffects = (
   return nextStates;
 };
 
+/**
+ * InteractionCoordinator - Main interaction processing orchestrator
+ *
+ * Coordinates all interaction types and manages the parameter web engines
+ * and reality inversion system.
+ */
+export class InteractionCoordinator {
+  private parameterWebEngine: ParameterWebEngine;
+  private realityInversionEngine: RealityInversionEngine;
+  private currentStates: Record<string, SectionVisualState> = {};
+
+  constructor(
+    parameterWeb?: ParameterWeb,
+    realityInversionEngine?: RealityInversionEngine
+  ) {
+    this.parameterWebEngine = new ParameterWebEngine(
+      parameterWeb || ParameterWebEngine.createHoverWeb()
+    );
+    this.realityInversionEngine = realityInversionEngine || new RealityInversionEngine();
+  }
+
+  /**
+   * Process an interaction and return the updated state
+   */
+  processInteraction(
+    type: 'hover' | 'click' | 'focus' | 'scroll',
+    sectionId: string,
+    details: any,
+    currentStates: Record<string, SectionVisualState>
+  ): {
+    sectionStates?: Record<string, SectionVisualState>;
+    paramPatches?: Record<string, ParameterPatch>;
+    sparkleEffects?: SparkleEffect[];
+    realityInversion?: RealityInversionState;
+  } {
+    this.currentStates = currentStates;
+
+    switch (type) {
+      case 'hover':
+        return this.processHoverInteraction(sectionId, details);
+      case 'click':
+        return this.processClickInteraction(sectionId, details);
+      case 'focus':
+        return this.processFocusInteraction(sectionId, details);
+      case 'scroll':
+        return this.processScrollInteraction(sectionId, details);
+      default:
+        return {};
+    }
+  }
+
+  /**
+   * Update current states
+   */
+  updateStates(states: Record<string, SectionVisualState>): void {
+    this.currentStates = states;
+  }
+
+  /**
+   * Trigger reality inversion
+   */
+  triggerRealityInversion(intensity: number = 1.0): {
+    sectionStates: Record<string, SectionVisualState>;
+    paramPatches: Record<string, ParameterPatch>;
+    sparkleEffects?: SparkleEffect[];
+    realityInversion: RealityInversionState;
+  } {
+    const result = this.realityInversionEngine.triggerRealityInversion(this.currentStates, intensity);
+    return {
+      sectionStates: result.sectionStates,
+      paramPatches: result.paramPatches,
+      sparkleEffects: result.sparkleEffects,
+      realityInversion: result.realityInversion || {
+        isActive: true,
+        intensity,
+        duration: 2000,
+        startTime: Date.now(),
+      },
+    };
+  }
+
+  private processHoverInteraction(sectionId: string, details: any) {
+    const cascades = this.parameterWebEngine.calculateCascade(
+      sectionId,
+      'gridDensity',
+      details.intensity || 1.2,
+      this.currentStates
+    );
+
+    const paramPatches: Record<string, ParameterPatch> = {};
+    Object.entries(cascades).forEach(([id, changes]) => {
+      paramPatches[id] = {
+        density: changes.gridDensity,
+        morph: changes.colorIntensity ? changes.colorIntensity / 4 : undefined,
+      };
+    });
+
+    return { paramPatches };
+  }
+
+  private processClickInteraction(sectionId: string, details: any) {
+    const cascades = this.parameterWebEngine.calculateCascade(
+      sectionId,
+      'depth',
+      details.depth || 10,
+      this.currentStates
+    );
+
+    const paramPatches: Record<string, ParameterPatch> = {};
+    Object.entries(cascades).forEach(([id, changes]) => {
+      paramPatches[id] = {
+        dispAmp: Math.abs(changes.depth || 0) * 0.01,
+        chaos: (4 - (changes.reactivity || 1)) / 4,
+      };
+    });
+
+    return { paramPatches };
+  }
+
+  private processFocusInteraction(sectionId: string, details: any) {
+    // Focus interactions could reduce chaos in focused section
+    return {
+      paramPatches: {
+        [sectionId]: {
+          chaos: 0.1,
+          morph: 0.9,
+        },
+      },
+    };
+  }
+
+  private processScrollInteraction(sectionId: string, details: any) {
+    // Scroll could affect time scale and movement
+    return {
+      paramPatches: {
+        [sectionId]: {
+          timeScale: 1 + (details.velocity || 0) * 0.1,
+          dispAmp: Math.abs(details.velocity || 0) * 0.005,
+        },
+      },
+    };
+  }
+}
+

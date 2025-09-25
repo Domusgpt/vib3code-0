@@ -39,7 +39,7 @@ export interface SystemConfiguration {
  */
 export class ConfigValidator {
   private readonly REQUIRED_PRESET_PROPERTIES = [
-    'id', 'name', 'description', 'tags', 'effects'
+    'name', 'description', 'effects'
   ] as const;
 
   private readonly REQUIRED_EFFECT_PROPERTIES = [
@@ -175,11 +175,19 @@ export class ConfigValidator {
       recommendations.push('Consider adding more presets for richer visual variety');
     }
 
-    // Check for balanced preset types
-    const tags = Object.values(presets).flatMap(p => p.tags || []);
-    const uniqueTags = new Set(tags);
-    if (uniqueTags.size < 3) {
-      recommendations.push('Consider adding presets with different themes/tags for better categorization');
+    // Check for preset diversity based on names
+    const presetNames = Object.values(presets).map(p => p.name.toLowerCase());
+    const themes = new Set(presetNames.map(name => {
+      // Extract theme keywords from preset names
+      if (name.includes('zen') || name.includes('calm')) return 'zen';
+      if (name.includes('dimensional') || name.includes('focus')) return 'dimensional';
+      if (name.includes('holographic') || name.includes('shimmer')) return 'holographic';
+      if (name.includes('chaos') || name.includes('glitch')) return 'chaos';
+      return 'other';
+    }));
+
+    if (themes.size < 2) {
+      recommendations.push('Consider adding presets with different themes for better variety');
     }
 
     return { isValid: errors.length === 0, errors, warnings, recommendations };
@@ -384,13 +392,18 @@ export class ConfigValidator {
           presetParams.add(param);
         });
       }
+      if (preset.effects?.unfocused?.parameters) {
+        Object.keys(preset.effects.unfocused.parameters).forEach(param => {
+          presetParams.add(param);
+        });
+      }
     });
 
     // Check that major parameters are covered by presets
-    const majorParams = ['hue', 'density', 'chaos', 'morph'];
+    const majorParams = ['density', 'chaos', 'morph', 'glitch'];
     majorParams.forEach(param => {
       if (!presetParams.has(param)) {
-        recommendations.push(`No presets modify ${param} - consider adding presets that affect this parameter`);
+        recommendations.push(`Consider adding presets that modify ${param} for richer visual effects`);
       }
     });
 
