@@ -13,6 +13,8 @@ import {
   useSectionParams,
 } from '@/lib/store';
 import type { VIB3GeometryParams } from '@/lib/vib34d-geometries';
+import { globalMotion } from '@/lib/global-motion-telemetry';
+import { vib34dEngine } from '@/lib/vib34d-interaction-engine';
 
 
 const VIB3Engine = dynamic(() => import('@/components/engines/VIB3Engine'), {
@@ -406,8 +408,29 @@ function AvantPostCard({
 }) {
   const events = useEvents();
 
+  useEffect(() => {
+    // Register card with global motion system
+    globalMotion.registerCard({
+      id: post.id,
+      groupId: sectionId,
+      visible: true,
+      focusLevel: 0,
+      supportLevel: 0,
+      distance: 0,
+      tiltBias: Math.random() * 2 - 1, // Random tilt bias
+      accentHue: parseInt(accentColor.slice(1, 3), 16) / 255,
+      bendResponse: 0,
+    });
+
+    return () => {
+      globalMotion.unregisterCard(post.id);
+    };
+  }, [post.id, sectionId, accentColor]);
+
   return (
     <motion.article
+      data-card-id={post.id}
+      data-group-id={sectionId}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
