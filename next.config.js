@@ -1,19 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Development vs Production config
-  ...(process.env.NODE_ENV === 'production' ? {
-    output: 'export',
-    trailingSlash: true,
-    skipTrailingSlashRedirect: true,
-    distDir: 'out',
-    assetPrefix: '/vib3code-0',
-    basePath: '/vib3code-0',
-  } : {
-    // Development-only config
-    reactStrictMode: true,
-    swcMinify: true,
-  }),
-  
+  // GitHub Pages configuration
+  output: 'export',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  distDir: 'out',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/vib3code-0' : '',
+  reactStrictMode: true,
+  swcMinify: true,
+
   images: {
     unoptimized: true,
   },
