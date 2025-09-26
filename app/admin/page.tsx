@@ -310,34 +310,83 @@ export default function AdminPage() {
             <LivePreview />
             
             <div className="bg-gray-900/50 rounded-lg p-6">
-              <h3 className="text-lg font-bold text-cyan-400 mb-4">Content Management</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-gray-800 rounded">
-                  <div>
-                    <div className="text-white font-medium">AI News Articles</div>
-                    <div className="text-sm text-gray-400">Manage AI research posts</div>
+              <h3 className="text-lg font-bold text-cyan-400 mb-4">AI Research Automation</h3>
+
+              {/* Research Ingestion Controls */}
+              <div className="space-y-4 mb-6">
+                <div className="p-4 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 rounded-lg border border-cyan-500/30">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <div className="text-white font-medium">Daily Research Ingestion</div>
+                      <div className="text-sm text-gray-400">Automatically publish AI research</div>
+                    </div>
+                    <span className="px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
+                      Active
+                    </span>
                   </div>
-                  <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm font-medium transition-colors">
-                    Edit
-                  </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={async () => {
+                        const res = await fetch('/api/research/schedule', {
+                          method: 'POST',
+                          headers: {
+                            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SCHEDULE_SECRET || 'schedule-secret'}`,
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        const data = await res.json();
+                        alert(data.success ? 'Research automation triggered!' : 'Failed to trigger automation');
+                      }}
+                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded text-sm font-medium transition-colors"
+                    >
+                      🚀 Run Now
+                    </button>
+                    <button
+                      onClick={() => alert('Upload feature coming soon!')}
+                      className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm font-medium transition-colors"
+                    >
+                      📤 Upload Research
+                    </button>
+                  </div>
                 </div>
-                
+
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div>✅ Randomizes holographic parameters for each post</div>
+                  <div>✅ Auto-categorizes based on content analysis</div>
+                  <div>✅ Runs daily at 9 AM or manually via button</div>
+                </div>
+              </div>
+
+              {/* Manual Content Management */}
+              <h4 className="text-sm font-bold text-cyan-400 mb-3">Manual Content</h4>
+              <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-800 rounded">
                   <div>
-                    <div className="text-white font-medium">Vibe Coding Posts</div>
-                    <div className="text-sm text-gray-400">Creative programming content</div>
+                    <div className="text-white font-medium text-sm">AI News Articles</div>
+                    <div className="text-xs text-gray-400">Manage AI research posts</div>
                   </div>
-                  <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm font-medium transition-colors">
+                  <button className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 rounded text-xs font-medium transition-colors">
                     Edit
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-gray-800 rounded">
                   <div>
-                    <div className="text-white font-medium">Philosophy Articles</div>
-                    <div className="text-sm text-gray-400">AI ethics and philosophical content</div>
+                    <div className="text-white font-medium text-sm">Vibe Coding Posts</div>
+                    <div className="text-xs text-gray-400">Creative programming content</div>
                   </div>
-                  <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm font-medium transition-colors">
+                  <button className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 rounded text-xs font-medium transition-colors">
+                    Edit
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-gray-800 rounded">
+                  <div>
+                    <div className="text-white font-medium text-sm">Philosophy Articles</div>
+                    <div className="text-xs text-gray-400">AI ethics and philosophical content</div>
+                  </div>
+                  <button className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 rounded text-xs font-medium transition-colors">
                     Edit
                   </button>
                 </div>

@@ -1,0 +1,28 @@
+name: Daily Research Automation
+
+on:
+  schedule:
+    # Run at 9 AM UTC every day
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ingest-research:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Research Ingestion
+        run: |
+          curl -X POST \
+            https://vib3code-0.vercel.app/api/research/schedule \
+            -H "Authorization: Bearer ${{ secrets.SCHEDULE_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d '{"source": "scheduled"}'
+
+      - name: Notify Success
+        if: success()
+        run: echo "✅ Daily research automation completed"
+
+      - name: Notify Failure
+        if: failure()
+        run: echo "❌ Daily research automation failed"
