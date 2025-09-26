@@ -13,13 +13,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+
   webpack: (config) => {
     // Handle GLSL shader files
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
       use: ['raw-loader'],
     });
-    
+
     // Handle audio files
     config.module.rules.push({
       test: /\.(mp3|wav|ogg)$/,
@@ -36,4 +37,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig;
+export default nextConfig;
