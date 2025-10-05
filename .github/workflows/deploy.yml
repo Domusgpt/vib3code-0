@@ -2,9 +2,9 @@ name: Deploy VIB3CODE-0 to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ codex/implement-comprehensive-vib34d-design-system-facgro ]
   pull_request:
-    branches: [ main ]
+    branches: [ codex/implement-comprehensive-vib34d-design-system-facgro ]
   workflow_dispatch:
 
 permissions:
